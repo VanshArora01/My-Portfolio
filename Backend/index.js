@@ -69,18 +69,51 @@ app.post("/contact", async (req, res) => {
             });
         }
 
-        // Configure mail transporter with timeout and connection settings
-        const transporter = nodemailer.createTransport({
+        // Try multiple email configurations for Render compatibility
+        let transporter;
+        let emailSent = false;
+        
+        // Configuration 1: Standard Gmail (may work on some Render instances)
+        const gmailConfig = {
             service: "gmail",
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
-            // Add timeout and connection settings for better reliability
-            connectionTimeout: 30000, // 30 seconds
-            greetingTimeout: 30000,   // 30 seconds
-            socketTimeout: 30000,     // 30 seconds
-        });
+            connectionTimeout: 15000,
+            greetingTimeout: 15000,
+            socketTimeout: 15000,
+            pool: true,
+            maxConnections: 1,
+            maxMessages: 1,
+            rateLimit: 1
+        };
+        
+        // Configuration 2: Alternative Gmail with explicit host/port
+        const gmailAltConfig = {
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+            connectionTimeout: 15000,
+            greetingTimeout: 15000,
+            socketTimeout: 15000,
+            tls: {
+                rejectUnauthorized: false
+            }
+        };
+        
+        // Try standard Gmail first
+        try {
+            transporter = nodemailer.createTransport(gmailConfig);
+            console.log("Using standard Gmail configuration");
+        } catch (error) {
+            console.log("Standard Gmail failed, trying alternative configuration");
+            transporter = nodemailer.createTransport(gmailAltConfig);
+        }
 
         const mailOptions = {
             from: process.env.EMAIL_USER, // Use configured email as sender
@@ -103,17 +136,34 @@ Message: ${trimmedMessage}
 
         console.log("Attempting to send email...");
         
-        // Verify connection before sending
         try {
-            await transporter.verify();
-            console.log("Email connection verified successfully");
-        } catch (verifyError) {
-            console.error("Email connection verification failed:", verifyError);
-            throw new Error("Email service connection failed");
+            // Try sending with the first configuration
+            const emailResult = await transporter.sendMail(mailOptions);
+            console.log("Email sent successfully:", emailResult.messageId);
+            emailSent = true;
+        } catch (firstError) {
+            console.log("First email attempt failed:", firstError.message);
+            
+            // If first attempt fails and we used standard Gmail, try alternative config
+            if (transporter.options.service === 'gmail') {
+                console.log("Trying alternative Gmail configuration...");
+                try {
+                    const altTransporter = nodemailer.createTransport(gmailAltConfig);
+                    const emailResult = await altTransporter.sendMail(mailOptions);
+                    console.log("Email sent successfully with alternative config:", emailResult.messageId);
+                    emailSent = true;
+                } catch (secondError) {
+                    console.error("Both email configurations failed");
+                    throw secondError; // Throw the second error
+                }
+            } else {
+                throw firstError; // If we already tried alternative, throw first error
+            }
         }
         
-        const emailResult = await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully:", emailResult.messageId);
+        if (!emailSent) {
+            throw new Error("All email sending attempts failed");
+        }
 
         res.status(200).json({ success: true, message: "Message sent successfully!" });
     } catch (error) {
@@ -125,13 +175,17 @@ Message: ${trimmedMessage}
         if (error.code === 'EAUTH') {
             errorMessage = "Email authentication failed. Please check email credentials.";
         } else if (error.code === 'ECONNECTION') {
-            errorMessage = "Unable to connect to email service. Please try again.";
+            errorMessage = "Unable to connect to email service due to hosting restrictions. Please contact me directly.";
         } else if (error.code === 'ETIMEDOUT') {
             errorMessage = "Email service timeout. Please try again.";
+        } else if (error.code === 'ECONNREFUSED') {
+            errorMessage = "Email service connection refused. This may be due to hosting restrictions. Please contact me directly.";
         } else if (error.message.includes('Invalid login')) {
             errorMessage = "Invalid email credentials.";
         } else if (error.message.includes('Email service connection failed')) {
-            errorMessage = "Email service is currently unavailable. Please try again later.";
+            errorMessage = "Email service is currently unavailable due to hosting restrictions. Please contact me directly at my email.";
+        } else if (error.message.includes('socket hang up') || error.message.includes('connect ECONNREFUSED')) {
+            errorMessage = "Email service is blocked by hosting provider. Please contact me directly.";
         }
         
         res.status(500).json({ 
