@@ -69,50 +69,32 @@ app.post("/contact", async (req, res) => {
             });
         }
 
-        // Try multiple email configurations for Render compatibility
+        // Option 1: Try SMTP2GO first (recommended for Render)
+        let useSMTP2GO = false;
         let transporter;
-        let emailSent = false;
         
-        // Configuration 1: Standard Gmail (may work on some Render instances)
-        const gmailConfig = {
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-            connectionTimeout: 15000,
-            greetingTimeout: 15000,
-            socketTimeout: 15000,
-            pool: true,
-            maxConnections: 1,
-            maxMessages: 1,
-            rateLimit: 1
-        };
-        
-        // Configuration 2: Alternative Gmail with explicit host/port
-        const gmailAltConfig = {
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-            connectionTimeout: 15000,
-            greetingTimeout: 15000,
-            socketTimeout: 15000,
-            tls: {
-                rejectUnauthorized: false
-            }
-        };
-        
-        // Try standard Gmail first
-        try {
-            transporter = nodemailer.createTransport(gmailConfig);
-            console.log("Using standard Gmail configuration");
-        } catch (error) {
-            console.log("Standard Gmail failed, trying alternative configuration");
-            transporter = nodemailer.createTransport(gmailAltConfig);
+        if (process.env.SMTP2GO_USERNAME && process.env.SMTP2GO_PASSWORD) {
+            useSMTP2GO = true;
+            transporter = nodemailer.createTransporter({
+                host: "mail.smtp2go.com",
+                port: 2525, // Port 2525 is allowed on Render free tier
+                secure: false, // Use STARTTLS
+                auth: {
+                    user: process.env.SMTP2GO_USERNAME,
+                    pass: process.env.SMTP2GO_PASSWORD,
+                },
+                connectionTimeout: 30000,
+                greetingTimeout: 30000,
+                socketTimeout: 30000,
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+            console.log("Using SMTP2GO service for email delivery");
+        } else {
+            // Option 2: Fallback to webhook-based service (Formspree)
+            console.log("SMTP2GO not configured, using webhook-based email service");
+            // We'll implement this below
         }
 
         const mailOptions = {
@@ -134,58 +116,60 @@ Message: ${trimmedMessage}
             `,
         };
 
-        console.log("Attempting to send email...");
-        
-        try {
-            // Try sending with the first configuration
+        if (useSMTP2GO) {
+            console.log("Attempting to send email via SMTP2GO...");
             const emailResult = await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully:", emailResult.messageId);
-            emailSent = true;
-        } catch (firstError) {
-            console.log("First email attempt failed:", firstError.message);
+            console.log("Email sent successfully via SMTP2GO:", emailResult.messageId);
+        } else {
+            // Use Formspree webhook-based email service (no SMTP required)
+            console.log("Attempting to send email via Formspree webhook...");
             
-            // If first attempt fails and we used standard Gmail, try alternative config
-            if (transporter.options.service === 'gmail') {
-                console.log("Trying alternative Gmail configuration...");
-                try {
-                    const altTransporter = nodemailer.createTransport(gmailAltConfig);
-                    const emailResult = await altTransporter.sendMail(mailOptions);
-                    console.log("Email sent successfully with alternative config:", emailResult.messageId);
-                    emailSent = true;
-                } catch (secondError) {
-                    console.error("Both email configurations failed");
-                    throw secondError; // Throw the second error
-                }
-            } else {
-                throw firstError; // If we already tried alternative, throw first error
+            if (!process.env.FORMSPREE_ENDPOINT) {
+                throw new Error("No email service configured. Please set up SMTP2GO or Formspree.");
             }
-        }
-        
-        if (!emailSent) {
-            throw new Error("All email sending attempts failed");
+            
+            const formspreeResponse = await fetch(process.env.FORMSPREE_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: trimmedName,
+                    email: trimmedEmail,
+                    message: trimmedMessage,
+                    _replyto: trimmedEmail,
+                    _subject: `Portfolio Contact from ${trimmedName}`
+                })
+            });
+            
+            if (!formspreeResponse.ok) {
+                throw new Error(`Formspree request failed: ${formspreeResponse.status}`);
+            }
+            
+            console.log("Email sent successfully via Formspree");
         }
 
         res.status(200).json({ success: true, message: "Message sent successfully!" });
     } catch (error) {
         console.error("Error sending email:", error);
         
-        // Provide more specific error messages
+        // Provide more specific error messages for SMTP2GO
         let errorMessage = "Error sending message.";
         
         if (error.code === 'EAUTH') {
-            errorMessage = "Email authentication failed. Please check email credentials.";
+            errorMessage = "Email authentication failed. Please check SMTP2GO credentials.";
         } else if (error.code === 'ECONNECTION') {
-            errorMessage = "Unable to connect to email service due to hosting restrictions. Please contact me directly.";
+            errorMessage = "Unable to connect to SMTP2GO service. Please try again.";
         } else if (error.code === 'ETIMEDOUT') {
-            errorMessage = "Email service timeout. Please try again.";
+            errorMessage = "SMTP2GO service timeout. Please try again.";
         } else if (error.code === 'ECONNREFUSED') {
-            errorMessage = "Email service connection refused. This may be due to hosting restrictions. Please contact me directly.";
+            errorMessage = "SMTP2GO connection refused. Please try again later.";
         } else if (error.message.includes('Invalid login')) {
-            errorMessage = "Invalid email credentials.";
-        } else if (error.message.includes('Email service connection failed')) {
-            errorMessage = "Email service is currently unavailable due to hosting restrictions. Please contact me directly at my email.";
+            errorMessage = "Invalid SMTP2GO credentials.";
         } else if (error.message.includes('socket hang up') || error.message.includes('connect ECONNREFUSED')) {
-            errorMessage = "Email service is blocked by hosting provider. Please contact me directly.";
+            errorMessage = "SMTP2GO service is temporarily unavailable. Please try again.";
+        } else if (error.message.includes('550')) {
+            errorMessage = "Email delivery failed. Please check email address.";
         }
         
         res.status(500).json({ 
