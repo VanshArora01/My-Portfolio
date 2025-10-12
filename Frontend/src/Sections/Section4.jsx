@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import Magnet from '../Components/Magnet';
+import { API_ENDPOINTS } from '../config';
 
 const Section4 = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const Section4 = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/contact', {
+      const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

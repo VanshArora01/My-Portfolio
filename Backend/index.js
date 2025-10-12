@@ -9,11 +9,21 @@ const app = express();
 
 // Configure CORS to allow requests from frontend
 app.use(cors({
-    origin: "http://localhost:5173", // Vite default port
+    origin: [
+        "http://localhost:5173", // Vite default port for development
+        "https://your-frontend-domain.vercel.app", // Replace with your actual frontend domain
+        "https://your-frontend-domain.netlify.app", // Replace with your actual frontend domain
+        process.env.FRONTEND_URL // Environment variable for frontend URL
+    ].filter(Boolean), // Remove undefined values
     credentials: true
 }));
 
 app.use(express.json());
+
+// GET route for root path
+app.get("/", (req, res) => {
+    res.json({ message: "Portfolio Backend API is running!" });
+});
 
 // POST route for contact form
 app.post("/contact", async (req, res) => {
