@@ -201,8 +201,8 @@ const Navbar = () => {
                                 <div className="text-xs font-medium text-gray-400 uppercase">
                                     Say Hello
                                 </div>
-                                <a href="" className="block text-sm text-blue-600 hover:text-blue-800">
-                                    vansharoracodez@gmail.com
+                                <a  className="block text-sm text-blue-600 hover:text-blue-800">
+                                    Vanshcodes01@gmail.com
                                 </a>
                                 <a href="https://www.linkedin.com/in/vansharora01/" className="block text-sm text-blue-600 hover:text-blue-800">
                                     linkedin/Vansharora01

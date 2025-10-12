@@ -47,7 +47,7 @@ const Resume = () => {
       description: "Developed a fully responsive AI Powered Learning Platfrom using React.js and Tailwind CSS.",
       achievements: [
         "Developed a fully responsive AI Powered Learning Platfrom using React.js and Tailwind CSS",
-        "Integrated a AI Powered Learning Platfrom for the AI Powered Learning Platfrom",
+        "Integrated a AI Powered Learning Platfrom for Students",
         "Enabled Student and Teacher Dashboard for the Easy Management of the Platfrom"
       ]
     },
@@ -93,9 +93,8 @@ const Resume = () => {
               {/* Contact Info */}
               <div>
                 <div className="space-y-2 text-gray-700">
-                  <div className="text-green-600 font-medium">vansharora.dev</div>
-                  <div>Ludhiana, Punjab</div>
                   <div className="text-green-600">Vanshcodes01@gmail.com</div>
+                  <div>Ludhiana, Punjab</div>
                 </div>
               </div>    
 
