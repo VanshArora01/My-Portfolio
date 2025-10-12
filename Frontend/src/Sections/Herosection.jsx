@@ -15,11 +15,11 @@ const HeroSection = () => {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 w-full max-w-7xl sm:px-10 mx-auto px-6  md:px-8 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 md:px-8 lg:px-8 xl:px-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xs:gap-8 sm:gap-10 lg:gap-16 items-center min-h-screen py-8 xs:py-10 sm:py-12 lg:py-16">
                     {/* Left Side - Text Content */}
                     <motion.div
-                        className="text-white relative space-y-4 -mt-20 mb-30 sm:space-y-6 lg:space-y-8 px-4 sm:px-6 lg:py-10 lg:top-20"
+                        className="text-white relative lg:-mt-40 space-y-3 xs:space-y-4 sm:space-y-5 lg:space-y-8 px-3 xs:px-4 sm:px-6 lg:py-10 lg:top-20 order-1 lg:order-1"
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -28,26 +28,26 @@ const HeroSection = () => {
 
                         {/* Dot Grid Pattern - Top Left Corner */}
                         <motion.div
-                            className="absolute -top-12 -left-6 sm:-top-16 sm:-left-8 lg:-left-16 w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16"
+                            className="absolute -top-8 -left-4 xs:-top-10 xs:-left-5 sm:-top-12 sm:-left-6 lg:-top-16 lg:-left-8 xl:-left-16 w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1.8, duration: 0.6 }}
                         >
-                            <div className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] lg:gap-1">
+                            <div className="grid grid-cols-3 lg:grid-cols-4 gap-[1px] xs:gap-[2px] lg:gap-1">
                                 {[...Array(12)].map((_, i) => (
-                                    <div key={i} className="w-0.5 h-0.5 sm:w-0.5 sm:h-0.5 lg:w-1 lg:h-1 bg-white/30 rounded-full"></div>
+                                    <div key={i} className="w-0.5 h-0.5 xs:w-0.5 xs:h-0.5 sm:w-0.5 sm:h-0.5 lg:w-1 lg:h-1 bg-white/30 rounded-full"></div>
                                 ))}
                             </div>
                         </motion.div>
 
                         {/* Curvy Squiggly Line - Near Heading */}
                         <motion.div
-                            className="absolute -top-2 -right-4 sm:-top-4 sm:-right-8 lg:-right-16"
+                            className="absolute -top-1 -right-2 xs:-top-2 xs:-right-3 sm:-top-4 sm:-right-8 lg:-right-16"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 2.0, duration: 0.6 }}
                         >
-                            <svg width="40" height="64" viewBox="0 0 50 80" fill="none" className="scale-75 sm:scale-75 lg:scale-100">
+                            <svg width="30" height="48" viewBox="0 0 50 80" fill="none" className="xs:w-[35px] xs:h-[56px] sm:w-[40px] sm:h-[64px] lg:w-[50px] lg:h-[80px]">
                                 <path
                                     d="M10 5 Q30 15, 20 35 Q5 55, 40 70"
                                     stroke="white"
@@ -60,7 +60,7 @@ const HeroSection = () => {
 
                         {/* Thin Outlined Circle - Near Bottom Text */}
                         <motion.div
-                            className="absolute bottom-6 -left-10 sm:bottom-8 sm:-left-12 lg:-left-20 w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full border border-white/30"
+                            className="absolute bottom-4 -left-6 xs:bottom-5 xs:-left-7 sm:bottom-8 sm:-left-12 lg:-left-20 w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full border border-white/30"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 2.2, duration: 0.6 }}
@@ -73,16 +73,16 @@ const HeroSection = () => {
                             transition={{ delay: 0.2, duration: 0.8 }}
                             className="relative z-10"
                         >
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-                                <span className="text-[#D9F99D]">Full Stack</span>
-                                <br />
-                                Developer.
+                            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
+                                <span className="text-[#D9F99D] block">Full Stack</span>
+                                
+                                <span className="text-white block">Developer.</span>
                             </h1>
                         </motion.div>
 
                         {/* Subtext */}
                         <motion.p
-                            className="relative z-10 text-base sm:text-lg lg:text-xl text-white/90 max-w-prose leading-relaxed"
+                            className="relative z-10 text-sm xs:text-base sm:text-lg lg:text-xl text-white/90 max-w-prose leading-relaxed"
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.8 }}
@@ -92,18 +92,18 @@ const HeroSection = () => {
 
                         {/* Two Column Highlights */}
                         <motion.div
-                            className="relative z-10 flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 pt-2 sm:pt-4 lg:pt-8"
+                            className="relative z-10 flex flex-col xs:flex-col sm:flex-row gap-3 xs:gap-4 sm:gap-6 lg:gap-8 pt-2 xs:pt-3 sm:pt-4 lg:pt-8"
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
                         >
-                            <div className="space-y-2">
-                                <p className="text-[#D9F99D] font-medium text-sm sm:text-base">
+                            <div className="space-y-1 xs:space-y-2">
+                                <p className="text-[#D9F99D] font-medium text-xs xs:text-sm sm:text-base">
                                     Skilled at frontend, backend & UI engineering.
                                 </p>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-[#D9F99D] font-medium text-sm sm:text-base">
+                            <div className="space-y-1 xs:space-y-2">
+                                <p className="text-[#D9F99D] font-medium text-xs xs:text-sm sm:text-base">
                                     Experience building products for clients & startups.
                                 </p>
                             </div>
@@ -111,7 +111,7 @@ const HeroSection = () => {
                     </motion.div>   
 
                     {/* Right Side - Image and Decorations */}
-                    <div className="relative flex justify-center lg:justify-end mt-8 lg:mt-0">
+                    <div className="relative flex justify-center lg:justify-end mt-6 xs:mt-8 sm:mt-10 lg:mt-0 order-2 lg:order-2">
                         {/* Main Image Container */}
                         <motion.div
                             className="relative"
@@ -120,7 +120,7 @@ const HeroSection = () => {
                             transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
                         >
                             {/* Image */}
-                            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96">
+                            <div className="relative w-40 h-40 xs:w-48 xs:h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 2xl:w-96 2xl:h-96">
                                 <div className="w-full h-full bg-gray-200 rounded-lg shadow-2xl overflow-hidden border-4 border-white">
                                     <img
                                         src={Me}
