@@ -31,9 +31,40 @@ const Section4 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form data
-    if (!formData.name || !formData.email || !formData.message) {
+    // Client-side validation
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+    
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
       toast.error('Please fill in all fields', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error('Please enter a valid email address', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // Length validation
+    if (trimmedName.length > 100) {
+      toast.error('Name must be less than 100 characters', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    if (trimmedMessage.length > 1000) {
+      toast.error('Message must be less than 1000 characters', {
         position: "top-right",
         autoClose: 3000,
       });
@@ -48,16 +79,34 @@ const Section4 = () => {
     });
 
     try {
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          message: trimmedMessage
+        }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorResult = await response.json();
+          errorMessage = errorResult.message || errorMessage;
+        } catch (e) {
+          // If response is not JSON, use default error message
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -84,7 +133,18 @@ const Section4 = () => {
     } catch (error) {
       console.error('Error sending message:', error);
       toast.dismiss(loadingToast);
-      toast.error('Failed to send message. Please check your connection and try again.', {
+      
+      let errorMessage = 'Failed to send message. Please try again later.';
+      
+      if (error.name === 'AbortError') {
+        errorMessage = 'Request timed out. Please check your connection and try again.';
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Network error. Please check your internet connection.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
       });
