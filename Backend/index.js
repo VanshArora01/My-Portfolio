@@ -69,13 +69,17 @@ app.post("/contact", async (req, res) => {
             });
         }
 
-        // Configure mail transporter
+        // Configure mail transporter with timeout and connection settings
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
+            // Add timeout and connection settings for better reliability
+            connectionTimeout: 30000, // 30 seconds
+            greetingTimeout: 30000,   // 30 seconds
+            socketTimeout: 30000,     // 30 seconds
         });
 
         const mailOptions = {
@@ -98,8 +102,18 @@ Message: ${trimmedMessage}
         };
 
         console.log("Attempting to send email...");
-        await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully");
+        
+        // Verify connection before sending
+        try {
+            await transporter.verify();
+            console.log("Email connection verified successfully");
+        } catch (verifyError) {
+            console.error("Email connection verification failed:", verifyError);
+            throw new Error("Email service connection failed");
+        }
+        
+        const emailResult = await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully:", emailResult.messageId);
 
         res.status(200).json({ success: true, message: "Message sent successfully!" });
     } catch (error) {
@@ -111,9 +125,13 @@ Message: ${trimmedMessage}
         if (error.code === 'EAUTH') {
             errorMessage = "Email authentication failed. Please check email credentials.";
         } else if (error.code === 'ECONNECTION') {
-            errorMessage = "Unable to connect to email service.";
+            errorMessage = "Unable to connect to email service. Please try again.";
+        } else if (error.code === 'ETIMEDOUT') {
+            errorMessage = "Email service timeout. Please try again.";
         } else if (error.message.includes('Invalid login')) {
             errorMessage = "Invalid email credentials.";
+        } else if (error.message.includes('Email service connection failed')) {
+            errorMessage = "Email service is currently unavailable. Please try again later.";
         }
         
         res.status(500).json({ 

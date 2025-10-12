@@ -81,7 +81,7 @@ const Section4 = () => {
     try {
       // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for email sending
 
       const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
