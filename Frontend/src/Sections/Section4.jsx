@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import Magnet from '../Components/Magnet';
 import { API_ENDPOINTS } from '../config';
+import { toast } from 'react-toastify';
 
 const Section4 = () => {
   const [formData, setFormData] = useState({
@@ -32,11 +33,19 @@ const Section4 = () => {
     
     // Validate form data
     if (!formData.name || !formData.email || !formData.message) {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields', {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
     setIsSubmitting(true);
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Sending your message...', {
+      position: "top-right",
+    });
 
     try {
       const response = await fetch(API_ENDPOINTS.CONTACT, {
@@ -47,10 +56,18 @@ const Section4 = () => {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
-        alert('Message sent successfully! I\'ll get back to you soon.');
+        toast.dismiss(loadingToast);
+        toast.success('Message sent successfully! I\'ll get back to you soon.', {
+          position: "top-right",
+          autoClose: 5000,
+        });
         // Reset form
         setFormData({
           name: '',
@@ -58,14 +75,22 @@ const Section4 = () => {
           message: ''
         });
       } else {
-        alert(`Error: ${result.message}`);
+        toast.dismiss(loadingToast);
+        toast.error(result.message || 'Something went wrong. Please try again.', {
+          position: "top-right",
+          autoClose: 4000,
+        });
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      alert('Failed to send message. Please try again later.');
+      toast.dismiss(loadingToast);
+      toast.error('Failed to send message. Please check your connection and try again.', {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
