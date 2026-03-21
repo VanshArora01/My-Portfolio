@@ -1,227 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { Home, Briefcase, FileText, Github, Linkedin } from 'lucide-react';
+
+const leftLinks = [
+  { name: 'Home', path: '/', icon: Home, color: '#00FF87' },
+  { name: 'Work', path: '/work', icon: Briefcase, color: '#3BFCFF' },
+  { name: 'Resume', path: '/resume', icon: FileText, color: '#8A2BE2' },
+];
+
+const rightLinks = [
+  { name: 'GitHub', href: 'https://github.com/VanshArora01', icon: Github, color: '#F0F6FC' },
+  { name: 'LinkedIn', href: 'https://linkedin.com/in/vansharora01', icon: Linkedin, color: '#0077B5' },
+];
+
+const NavItem = ({ link, mouseX, isExternal = false }) => {
+  const ref = useRef(null);
+  const location = useLocation();
+  const isActive = !isExternal && location.pathname === link.path;
+
+  const distance = useMotionValue(Infinity);
+  const widthTransform = useTransform(distance, [-150, 0, 150], [45, 75, 45]);
+  const width = useSpring(widthTransform, { mass: 0.1, stiffness: 90, damping: 18 });
+
+  const [hovered, setHovered] = useState(false);
+
+  const content = (
+    <motion.div
+      style={{
+        width, height: width,
+        background: isActive ? `${link.color}15` : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${isActive ? `${link.color}40` : 'rgba(255,255,255,0.05)'}`,
+        borderRadius: '16px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: isActive ? link.color : '#8B949E',
+        backdropFilter: 'blur(10px)',
+        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        position: 'relative'
+      }}
+    >
+      <link.icon size={22} style={{ 
+        color: isActive || hovered ? link.color : '#8B949E',
+        filter: isActive || hovered ? `drop-shadow(0 0 8px ${link.color}80)` : 'none',
+        transition: 'all 0.2s ease'
+      }} />
+      
+      {isActive && (
+        <motion.div 
+          layoutId="nav-dot"
+          style={{ position: 'absolute', bottom: '6px', width: '4px', height: '4px', borderRadius: '50%', background: link.color }}
+        />
+      )}
+
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+            animate={{ opacity: 1, y: -45, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.8 }}
+            style={{
+              position: 'absolute',
+              padding: '6px 14px',
+              borderRadius: '100px',
+              background: 'rgba(3, 7, 8, 0.85)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              color: '#F0F6FC',
+              fontSize: '0.7rem',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}
+          >
+            {link.name}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+
+  return (
+    <div 
+      onPointerMove={(e) => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (rect) distance.set(e.clientX - (rect.left + rect.width / 2));
+      }}
+      onPointerLeave={() => distance.set(Infinity)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      ref={ref}
+      style={{ cursor: 'pointer' }}
+    >
+      {isExternal ? (
+        <a href={link.href} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+          {content}
+        </a>
+      ) : (
+        <Link to={link.path} style={{ textDecoration: 'none' }}>
+          {content}
+        </Link>
+      )}
+    </div>
+  );
+};
 
 const Navbar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isVisible, setIsVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
-    const location = useLocation();
+  const mouseX = useMotionValue(Infinity);
 
-    const menuItems = [
-        { name: 'My Self', href: '/', id: 'home' },
-        { name: 'My Work', href: '/mywork', id: 'work' },
-        { name: 'My Résumé', href: '/resume', id: 'resume' },
-    ];
+  return (
+    <div style={{ position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)', zIndex: 10000 }}>
+      {/* Background Dock Frame */}
+      <motion.div
+        onPointerMove={(e) => mouseX.set(e.clientX)}
+        onPointerLeave={() => mouseX.set(Infinity)}
+        className="glass"
+        style={{
+          padding: '10px 14px',
+          borderRadius: '26px',
+          display: 'flex',
+          alignItems: 'flex-end',
+          gap: '10px',
+          background: 'rgba(3, 7, 8, 0.4)',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+        }}
+      >
+        {/* Navigation Section */}
+        {leftLinks.map((link) => (
+          <NavItem key={link.name} link={link} mouseX={mouseX} />
+        ))}
 
-    // Get current active section based on location
-    const getActiveSection = () => {
-        const path = location.pathname;
-        if (path === '/') return 'home';
-        if (path === '/mywork') return 'work';
-        if (path === '/resume') return 'resume';
-        return 'home';
-    };
-
-    // Hide navbar on mobile scroll down
-    useEffect(() => {
-        const controlNavbar = () => {
-            const currentScrollY = window.scrollY;
-            if (window.innerWidth < 768) {
-                if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                    setIsVisible(false);
-                } else {
-                    setIsVisible(true);
-                }
-            } else {
-                setIsVisible(true);
-            }
-            setLastScrollY(currentScrollY);
-        };
-        const handleResize = () => {
-            if (window.innerWidth >= 768) setIsVisible(true);
-        };
-        window.addEventListener('scroll', controlNavbar);
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('scroll', controlNavbar);
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [lastScrollY]);
-
-    // ESC key closes menu
-    useEffect(() => {
-        const handleEscKey = (e) => e.key === 'Escape' && setIsMenuOpen(false);
-        document.addEventListener('keydown', handleEscKey);
-        return () => document.removeEventListener('keydown', handleEscKey);
-    }, []);
-
-    // Lock body scroll when menu open and dispatch events
-    useEffect(() => {
-        if (isMenuOpen) {
-            const prev = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            // Dispatch custom event to notify other components
-            window.dispatchEvent(new CustomEvent('dialog-open'));
-            return () => {
-                document.body.style.overflow = prev;
-                // Dispatch custom event when menu closes
-                window.dispatchEvent(new CustomEvent('dialog-close'));
-            };
-        } else {
-            // Dispatch close event when menu is closed
-            window.dispatchEvent(new CustomEvent('dialog-close'));
-        }
-    }, [isMenuOpen]);
-
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-    const menuVariants = {
-        hidden: { opacity: 0, scale: 0.9, x: 20, y: -10 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            x: 0,
-            y: 0,
-            transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94], staggerChildren: 0.05 },
-        },
-        exit: { opacity: 0, scale: 0.9, x: 20, y: -10, transition: { duration: 0.2 } },
-    };
-
-    const linkVariants = {
-        hidden: { opacity: 0, x: 15 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-    };
-
-    return (
-        <>
-            {/* Navbar Container */}
-            <motion.nav
-                className="fixed left-0 right-0 z-50 px-6 sm:px-8 py-3 sm:py-5 top-3 sm:top-5 md:top-6 transition-all duration-300"
-                animate={{ y: isVisible ? 0 : -120, opacity: isVisible ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-            >
-                <div className="flex items-center justify-between lg:max-w-[80%] mx-auto">
-                    {/* Logo */}
-                    <motion.div
-                        className="text-2xl md:text-3xl font-bold text-lime-400"
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        <Link to="/" className="block">
-                            Vansh
-                        </Link>
-                    </motion.div>
-
-                    {/* Menu Trigger */}
-                    <motion.button
-                        onClick={toggleMenu}
-                        className="relative p-3 sm:p-2 group"
-                        aria-label="Toggle menu"
-                        aria-expanded={isMenuOpen}
-                    >
-                        <div className="relative w-7 h-5 flex flex-col justify-between">
-                            <motion.div
-                                className="h-0.5 bg-blue-600"
-                                animate={{
-                                    rotate: isMenuOpen ? 45 : 0,
-                                    y: isMenuOpen ? 9 : 0,
-                                }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            <motion.div
-                                className="h-0.5 bg-blue-600"
-                                animate={{
-                                    rotate: isMenuOpen ? -45 : 0,
-                                    y: isMenuOpen ? -9 : 0,
-                                }}
-                                transition={{ duration: 0.3 }}
-                            />
-                        </div>
-                    </motion.button>
-                </div>
-            </motion.nav>
-
-            {/* Animated Menu */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <>
-                        {/* Backdrop */}
-                        <motion.div
-                            className="fixed inset-0 z-40 bg-black/10 backdrop-blur-sm"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsMenuOpen(false)}
-                        />
-
-                        {/* Menu Dialog */}
-                        <motion.div
-                            className="fixed top-[4.5rem] sm:top-[5.5rem] inset-x-4 sm:inset-x-6 md:right-8 md:left-auto z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 sm:p-8 w-auto sm:min-w-[280px] max-w-full max-h-[70vh] overflow-y-auto"
-                            variants={menuVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                        >
-                            {/* Navigation Links */}
-                            <motion.div
-                                className="space-y-6 mb-8 text-center sm:text-left"
-                                variants={menuVariants}
-                                initial="hidden"
-                                animate="visible"
-                            >
-                                {menuItems.map((item) => (
-                                    <motion.div key={item.id} variants={linkVariants}>
-                                        <Link
-                                            to={item.href}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            className={`block text-lg font-medium transition-colors duration-300 py-2 relative 
-                        ${getActiveSection() === item.id
-                                                    ? 'text-blue-700'
-                                                    : 'text-blue-600 hover:text-blue-800'}
-                      `}
-                                        >
-                                            {item.name}
-                                            {/* Active underline animation */}
-                                            {getActiveSection() === item.id && (
-                                                <motion.span
-                                                    layoutId="underline"
-                                                    className="absolute lg:left-10 left-1/2 -translate-x-1/2 bottom-0 h-[2px] w-20 bg-blue-600 rounded-full"
-                                                />
-                                            )}
-                                        </Link>
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-
-                            {/* Contact Section */}
-                            <motion.div
-                                className="border-t border-gray-100 pt-6 space-y-4 text-center sm:text-left"
-                                variants={linkVariants}
-                            >
-                                <div className="text-xs font-medium text-gray-400 uppercase">
-                                    Say Hello
-                                </div>
-                                <a  className="block text-sm text-blue-600 hover:text-blue-800">
-                                    Vanshcodes01@gmail.com
-                                </a>
-                                <a href="https://www.linkedin.com/in/vansharora01/" className="block text-sm text-blue-600 hover:text-blue-800">
-                                    linkedin/Vansharora01
-                                </a>
-                            </motion.div>
-
-                            {/* Social Links */}
-                            <motion.div
-                                className="border-t border-gray-100 pt-4 mt-6 flex justify-center sm:justify-between gap-8"
-                                variants={linkVariants}
-                            >
-                             
-                            </motion.div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
-        </>
-    );
+        {/* Separator */}
+        <div style={{ width: '1px', height: '35px', background: 'rgba(255,255,255,0.08)', margin: '0 8px', alignSelf: 'center' }} />
+        
+        {/* Social Section */}
+        {rightLinks.map((link) => (
+          <NavItem key={link.name} link={link} mouseX={mouseX} isExternal={true} />
+        ))}
+      </motion.div>
+    </div>
+  );
 };
 
 export default Navbar;

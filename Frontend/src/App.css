@@ -1,8 +1,5 @@
-@import "tailwindcss";
-
 /* Hide scrollbar globally for all elements */
 * {
-    /* Hide scrollbar for Chrome, Safari, Edge */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
 }
@@ -11,17 +8,13 @@
     display: none; /* Chrome, Safari, Edge */
 }
 
-/* Hide scrollbar for Chrome, Safari, Edge */
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
 
-/* Hide scrollbar for Firefox */
 .no-scrollbar {
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
 }
 
 /* Custom Toast Styles */
@@ -31,7 +24,6 @@
     right: 20px !important;
 }
 
-/* Mobile responsive positioning */
 @media (max-width: 768px) {
     .toast-container {
         top: 80px !important;
@@ -48,7 +40,7 @@
     border-radius: 12px !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
     backdrop-filter: blur(10px) !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-family: var(--font-mono) !important;
 }
 
 .toast-body {
@@ -62,59 +54,25 @@
     background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
 }
 
-/* Success Toast */
 .Toastify__toast--success {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
 }
 
-.Toastify__toast--success .toast-progress {
-    background: linear-gradient(90deg, #10b981, #059669) !important;
-}
-
-/* Error Toast */
 .Toastify__toast--error {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
 }
 
-.Toastify__toast--error .toast-progress {
-    background: linear-gradient(90deg, #ef4444, #dc2626) !important;
-}
-
-/* Info Toast */
 .Toastify__toast--info {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
 }
 
-.Toastify__toast--info .toast-progress {
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8) !important;
-}
-
-/* Close button styling */
-.Toastify__close-button {
-    color: white !important;
-    opacity: 0.8 !important;
-}
-
-.Toastify__close-button:hover {
-    opacity: 1 !important;
-}
-
-/* Animation improvements */
-.Toastify__toast {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 .Toastify__toast--animate {
     animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
+@media (min-width: 768px) { .hero-right { display: flex !important; } }

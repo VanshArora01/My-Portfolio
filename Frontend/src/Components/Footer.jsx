@@ -1,89 +1,77 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-
+import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
 
 const Footer = () => {
-  const socialLinks = [
-    { name: 'GitHub', href: 'https://github.com/vansharora01', label: 'GitHub' },
-    { name: 'LinkedIn', href: 'https://linkedin.com/in/vansharora01', label: 'LinkedIn' },
-    
-  ];
-
-  const quickLinks = [
-    { name: 'My Work', href: '/mywork' },
-    { name: 'My Shelf', href: '/' },
-    { name: 'My Résumé', href: '/resume' }
-  ];
-
   return (
-    <footer className="bg-[#2c0055] w-full">
-      {/* Top Section - Contact Info and Links */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 py-10 md:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* Left Side - Say Hello */}
-          <div className="text-center md:text-left">
-            <h3 className="text-gray-300 text-xs md:text-sm uppercase tracking-widest mb-6 font-medium">
-              Say Hello
-            </h3>
-            <div className="space-y-3">
-              <a 
-                href="mailto:vanshcodes01@gmail.com" 
-                className="block text-lime-300 hover:text-lime-200 transition-colors duration-200"
-              >
-                Vanshcodes01@gmail.com
-              </a>
-             
+    <footer style={{ 
+      background: 'var(--bg)', 
+      borderTop: '1px solid var(--glass-border)', 
+      padding: '6rem 0 3rem', 
+      fontFamily: 'JetBrains Mono, monospace',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background Glow */}
+      <div style={{ position: 'absolute', bottom: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '300px', background: 'radial-gradient(circle, rgba(0, 255, 135, 0.05) 0%, transparent 70%)', filter: 'blur(50px)', zIndex: 0 }} />
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', marginBottom: '4rem' }}>
+          
+          {/* Brand Column */}
+          <div style={{ gridColumn: 'span 2' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+               <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#030708', fontSize: '0.75rem' }}>V</div>
+               <span style={{ color: '#F0F6FC', fontSize: '1.2rem', fontWeight: 700 }}>Vansh Arora</span>
             </div>
-          </div>
-
-          {/* Right Side - Quick Links */}
-          <div className="text-center md:text-left md:ml-auto">
-            <div className="space-y-3">
-              {quickLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="block text-lime-300 hover:text-lime-200 hover:underline transition-all duration-200"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Divider Line */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
-        <div className="border-t border-gray-500/40"></div>
-      </div>
-
-      {/* Bottom Section - Copyright and Social Links */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 py-6 md:py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Copyright */}
-          <div className="text-center md:text-left">
-            <p className="text-lime-300 text-sm">
-              © Vansh Arora 2025
+            <p style={{ color: '#8B949E', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: '400px' }}>
+              Building the next generation of developer-first ecosystems and AI-driven production systems.
             </p>
           </div>
 
-          {/* Social Media Links */}
-          <div className="flex items-center gap-6">
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="text-lime-300 hover:text-lime-200 hover:scale-110 transition-all duration-200 text-sm font-medium"
-              >
-                {social.name}
+          {/* Quick Links */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <h4 style={{ color: '#00FF87', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Navigation</h4>
+            {[
+              { name: 'Home', path: '/' },
+              { name: 'Work', path: '/work' },
+              { name: 'Resume', path: '/resume' }
+            ].map(link => (
+              <Link key={link.name} to={link.path} style={{ color: '#8B949E', textDecoration: 'none', transition: 'color 0.2s', fontSize: '0.9rem' }} onMouseEnter={e => e.currentTarget.style.color = '#F0F6FC'} onMouseLeave={e => e.currentTarget.style.color = '#8B949E'}>
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* Socials */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <h4 style={{ color: '#00FF87', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Connect</h4>
+            {[
+              { name: 'GitHub', href: 'https://github.com/VanshArora01', icon: <Github size={14} /> },
+              { name: 'LinkedIn', href: 'https://linkedin.com/in/vansharora01', icon: <Linkedin size={14} /> },
+              { name: 'Email', href: 'mailto:vansharora2310@gmail.com', icon: <Mail size={14} /> }
+            ].map(social => (
+              <a key={social.name} href={social.href} target="_blank" rel="noreferrer" style={{ color: '#8B949E', textDecoration: 'none', transition: 'color 0.2s', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }} onMouseEnter={e => e.currentTarget.style.color = '#F0F6FC'} onMouseLeave={e => e.currentTarget.style.color = '#8B949E'}>
+                {social.icon} {social.name} <ArrowUpRight size={12} style={{ opacity: 0.5 }} />
               </a>
             ))}
           </div>
+
         </div>
+
+        {/* Footer Bottom */}
+        <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ color: '#6E7681', fontSize: '0.8rem' }}>
+            © 2026 Vansh Arora. Built with precision.
+          </div>
+          <div style={{ display: 'flex', gap: '1.5rem' }}>
+             <span style={{ color: '#6E7681', fontSize: '0.8rem' }}>React</span>
+             <span style={{ color: '#6E7681', fontSize: '0.8rem' }}>Framer Motion</span>
+             <span style={{ color: '#6E7681', fontSize: '0.8rem' }}>Vite</span>
+          </div>
+        </div>
+
       </div>
     </footer>
   );

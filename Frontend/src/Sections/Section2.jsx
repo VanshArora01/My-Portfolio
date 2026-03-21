@@ -1,80 +1,150 @@
-import React from "react";
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { LogoLoop } from '../Components/LogoLoop';
+import { SiReact, SiNodedotjs, SiExpress, SiMongodb, SiPython, SiFastapi, SiTypescript, SiTailwindcss, SiGit, SiNextdotjs, SiDocker, SiFirebase } from 'react-icons/si';
 
-const Sections = () => {
-    return (
-        <section className="w-full min-h-screen -mt-20 bg-gray-50 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative overflow-hidden">
-            <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20">
-                {/* Design Section */}
-                <div className="relative flex flex-col items-center md:items-start text-center md:text-left md:translate-y-[-70px]">
-                    {/* Circle Decoration - Hidden on mobile */}
-                    <div className="absolute -top-10 -left-16 w-40 h-40 border-2 -z-10 border-lime-300 rounded-full hidden md:block"></div>
+const iconColor = '#00FF87';
 
-                    {/* Dot Grid - Hidden on mobile */}
-                    <div className="absolute top-0 -right-32 grid grid-cols-6 gap-2 opacity-70 hidden lg:grid">
-                        {Array.from({ length: 36 }).map((_, i) => (
-                            <span
-                                key={i}
-                                className="w-1 h-1 bg-lime-400 rounded-full inline-block"
-                            ></span>
-                        ))}
-                    </div>
+const allLogos = [
+  { node: <SiReact color={iconColor} />, title: 'React' },
+  { node: <SiNodedotjs color={iconColor} />, title: 'Node.js' },
+  { node: <SiExpress color={iconColor} />, title: 'Express' },
+  { node: <SiMongodb color={iconColor} />, title: 'MongoDB' },
+  { node: <SiPython color={iconColor} />, title: 'Python' },
+  { node: <SiFastapi color={iconColor} />, title: 'FastAPI' },
+  { node: <SiTypescript color={iconColor} />, title: 'TypeScript' },
+  { node: <SiTailwindcss color={iconColor} />, title: 'Tailwind' },
+  { node: <SiGit color={iconColor} />, title: 'Git' },
+  { node: <SiNextdotjs color={iconColor} />, title: 'Next.js' },
+  { node: <SiDocker color={iconColor} />, title: 'Docker' },
+  { node: <SiFirebase color={iconColor} />, title: 'Firebase' },
+];
 
-                    {/* Horizontal dots - Hidden on mobile */}
-                    <div className="flex space-x-3 mb-6 hidden md:flex">
-                        {[1, 2, 3, 4, 5].map((dot, i) => (
-                            <span
-                                key={i}
-                                className="w-3 h-3 border-2 border-purple-600 rounded-full transition"
-                            ></span>
-                        ))}
-                    </div>
+const Section2 = () => {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: '-100px' });
 
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold z-50 text-purple-700 mb-4 sm:mb-6 leading-snug">
-                        Developing
-                    </h2>
-                    <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed max-w-md mx-auto md:mx-0">
-                        I might not be a traditional designer working in Figma all day, but I design through code — crafting clean layouts, smooth interactions, and intuitive user experiences. My goal is to build interfaces that not only look good but also feel right to use.
-                    </p>
-                </div>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+  };
 
-                {/* Engineering Section */}
-                <div className="relative flex flex-col items-center md:items-start text-center md:text-left md:translate-y-[90px]">
-                    {/* Dotted decoration - Hidden on mobile */}
-                    <div className="absolute top-60 -right-32 grid grid-cols-6 gap-3 opacity-70 hidden lg:grid">
-                        {Array.from({ length: 36 }).map((_, i) => (
-                            <span
-                                key={i}
-                                className="w-1 h-1 bg-purple-400 rounded-full inline-block"
-                            ></span>
-                        ))}
-                    </div>
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  };
 
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-purple-700 mb-4 sm:mb-6 leading-snug">
-                        Engineering
-                    </h2>
-                    <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed max-w-md mx-auto md:mx-0">
-                        In building JavaScript applications, I'm equipped with just the
-                        right tools, and can absolutely function independently of them to
-                        deliver fast, resilient solutions optimized for scale — performance
-                        and scalability are priorities on my radar.
-                    </p>
-                </div>
-            </div>
+  return (
+    <section ref={containerRef} id="skills" style={{ padding: '6rem 0', overflow: 'hidden', position: 'relative' }}>
+      
+      {/* Background Accent */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '400px', background: 'radial-gradient(ellipse at center, rgba(0, 255, 135, 0.03) 0%, transparent 70%)', zIndex: 0 }} />
 
-            {/* Stairs Decoration - Hidden on mobile */}
-            <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 hidden md:block">
-                <div className="flex flex-col space-y-2">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="w-6 h-1 bg-purple-600"
-                            style={{ marginLeft: `${6 * i}px` }}
-                        ></div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          style={{ marginBottom: '6rem', textAlign: 'center' }}
+        >
+          <p className="text-glow" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+            Capabilities
+          </p>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800, color: '#F0F6FC', letterSpacing: '-0.02em' }}>
+            Mastering the <span style={{ color: '#00FF87' }}>Stack.</span>
+          </h2>
+        </motion.div>
+      </div>
+
+      {/* Full-width technology slider */}
+      <div style={{ width: '100%', marginBottom: '6rem', position: 'relative', zIndex: 1 }}>
+        <LogoLoop
+          logos={allLogos}
+          speed={80}
+          direction="left"
+          logoHeight={45}
+          gap={60}
+          scaleOnHover={false}
+          fadeOut={true}
+        />
+      </div>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
+        {/* Stats Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '2rem',
+            fontFamily: 'JetBrains Mono, monospace'
+          }}
+        >
+          {[
+            { value: '10+', label: 'Production Apps', sub: 'Deployed & Scaling', color: '#00FF87' },
+            { value: '2×', label: 'Hackathon Wins', sub: 'National Level', color: '#3BFCFF' },
+            { value: '99%', label: 'Stability', sub: 'In Production', color: '#8A2BE2' }
+          ].map((stat, i) => (
+            <motion.div 
+              key={i} 
+              variants={itemVariants}
+              className="glass"
+              style={{
+                padding: '3rem 2rem', borderBottom: `4px solid ${stat.color}`,
+                borderRadius: '24px', textAlign: 'center'
+              }}
+              whileHover={{ y: -10, boxShadow: `0 20px 40px -20px ${stat.color}33` }}
+            >
+              <div style={{ color: stat.color, fontSize: '4.5rem', fontWeight: 800, lineHeight: 1, marginBottom: '1rem' }} className="text-glow">
+                {stat.value}
+              </div>
+              <div style={{ color: '#F0F6FC', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                {stat.label}
+              </div>
+              <div style={{ color: '#6E7681', fontSize: '0.85rem' }}>
+                {stat.sub}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Secondary Skills Chips */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 1, duration: 1 }}
+          style={{
+            marginTop: '4rem',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '0.85rem',
+            flexWrap: 'wrap'
+          }}
+        >
+          {/* {["System Design", "Cloud Architecture", "LLM Fine-tuning", "Socket.io", "Geospatial Indexing", "CI/CD"].map((skill) => (
+            <span
+              key={skill}
+              className="glass"
+              style={{
+                padding: '8px 20px',
+                borderRadius: '100px',
+                fontSize: '0.8rem',
+                color: '#8B949E',
+                border: '1px solid rgba(255,255,255,0.05)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#00FF87'; e.currentTarget.style.borderColor = 'rgba(0, 255, 135, 0.3)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#8B949E'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; }}
+            >
+              {skill}
+            </span>
+          ))} */}
+        </motion.div>
+      </div>
+    </section>
+  );
 };
 
-export default Sections;
+export default Section2;

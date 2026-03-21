@@ -1,302 +1,172 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import Magnet from '../Components/Magnet';
 import { API_ENDPOINTS } from '../config';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 const Section4 = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const [isVisible, setIsVisible] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    // Trigger fade-in animation on mount
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Client-side validation
     const trimmedName = formData.name.trim();
     const trimmedEmail = formData.email.trim();
     const trimmedMessage = formData.message.trim();
     
     if (!trimmedName || !trimmedEmail || !trimmedMessage) {
-      toast.error('Please fill in all fields', {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      toast.error('Please enter a valid email address', {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      return;
-    }
-
-    // Length validation
-    if (trimmedName.length > 100) {
-      toast.error('Name must be less than 100 characters', {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      return;
-    }
-
-    if (trimmedMessage.length > 1000) {
-      toast.error('Message must be less than 1000 characters', {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error('Please fill in all fields');
       return;
     }
 
     setIsSubmitting(true);
-    
-    // Show loading toast
-    const loadingToast = toast.loading('Sending your message...', {
-      position: "top-right",
-    });
+    const loadingToast = toast.loading('Establishing connection...');
 
     try {
-      // Create AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for email sending
-
       const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: trimmedName,
-          email: trimmedEmail,
-          message: trimmedMessage
-        }),
-        signal: controller.signal
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmedName, email: trimmedEmail, message: trimmedMessage }),
       });
 
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        try {
-          const errorResult = await response.json();
-          errorMessage = errorResult.message || errorMessage;
-        } catch (e) {
-          // If response is not JSON, use default error message
-        }
-        throw new Error(errorMessage);
-      }
+      if (!response.ok) throw new Error('Network error');
 
       const result = await response.json();
-
       if (result.success) {
         toast.dismiss(loadingToast);
-        toast.success('Message sent successfully! I\'ll get back to you soon.', {
-          position: "top-right",
-          autoClose: 5000,
-        });
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          message: ''
-        });
+        toast.success('Transmission successful!');
+        setFormData({ name: '', email: '', message: '' });
       } else {
-        toast.dismiss(loadingToast);
-        toast.error(result.message || 'Something went wrong. Please try again.', {
-          position: "top-right",
-          autoClose: 4000,
-        });
+        throw new Error(result.message);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
       toast.dismiss(loadingToast);
-      
-      let errorMessage = 'Failed to send message. Please try again later.';
-      
-      if (error.name === 'AbortError') {
-        errorMessage = 'Request timed out. Please check your connection and try again.';
-      } else if (error.message.includes('Failed to fetch')) {
-        errorMessage = 'Network error. Please check your internet connection.';
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-      });
+      toast.error('Transmission failed. Try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section className={`min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 transition-opacity duration-1000 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="w-full max-w-4xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-indigo-600 mb-3 sm:mb-4">
-            Send me a message!
+    <section id="contact" className="full-screen-section" style={{ position: 'relative' }}>
+        <div className="mesh-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
+      <div className="pb-dock" style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
+        
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <span style={{ color: '#00FF87', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase' }}>Connection</span>
+          <h2 className="text-glow" style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800, color: '#F0F6FC', marginTop: '0.5rem' }}>
+            Let's Start a <span style={{ color: '#00FF87' }}>Dialogue.</span>
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl">
-            Got a question or proposal, or just want to say hello? Go ahead.
-          </p>
         </div>
 
-        {/* Form Section */}
-        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 p-4 sm:p-5">
-          {/* Name and Email Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {/* Name Input */}
-            <div className="relative">
-              <label
-                htmlFor="name"
-                className="block text-sm text-gray-500 mb-2"
-              >
-                Your Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                className="w-full pb-2 bg-transparent border-0 border-b border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-indigo-600 transition-colors duration-300"
-              />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }} className="contact-grid">
+          
+          {/* INFO PANEL */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="glass"
+            style={{ padding: '3rem', borderRadius: '32px', display: 'flex', flexDirection: 'column', gap: '2rem' }}
+          >
+            <div>
+              <h3 style={{ color: '#F0F6FC', fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>Collaboration Hub</h3>
+              <p style={{ color: '#8B949E', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                Whether you have a groundbreaking idea or a complex system that needs scaling, I'm here to build it with you.
+              </p>
             </div>
 
-            {/* Email Input */}
-            <div className="relative">
-              <label
-                htmlFor="email"
-                className="block text-sm text-gray-500 mb-2"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email address"
-                className="w-full pb-2 bg-transparent border-0 border-b border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-indigo-600 transition-colors duration-300"
-              />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {[
+                { label: 'Primary Email', value: 'vansharora2310@gmail.com', href: 'mailto:vansharora2310@gmail.com', color: '#00FF87' },
+                { label: 'Developer profile', value: 'github.com/VanshArora01', href: 'https://github.com/VanshArora01', color: '#3BFCFF' },
+                { label: 'Professional network', value: 'linkedin.com/in/vansharora01', href: 'https://linkedin.com/in/vansharora01', color: '#8A2BE2' }
+              ].map((item, i) => (
+                <div key={i}>
+                  <div style={{ color: '#6E7681', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{item.label}</div>
+                  <a href={item.href} target="_blank" rel="noreferrer" style={{ 
+                    color: '#CDD9E5', textDecoration: 'none', fontSize: '1rem', fontWeight: 600,
+                    transition: 'color 0.2s'
+                  }} onMouseEnter={e => e.currentTarget.style.color = item.color} onMouseLeave={e => e.currentTarget.style.color = '#CDD9E5'}>
+                    {item.value}
+                  </a>
+                </div>
+              ))}
             </div>
-          </div>
 
-          {/* Message Textarea */}
-          <div className="relative">
-            <label
-              htmlFor="message"
-              className="block text-sm text-gray-500 mb-2"
-            >
-              Your Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="“Hi, I think we need a design system for our products. When can you hop on to discuss?"
-              rows="2"
-              className="w-full pb-2 bg-transparent border-0 border-b border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:border-indigo-600 transition-colors duration-300 resize-none"
-            />
-          </div>
+            <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#00FF87' }} className="pulse-dot" />
+                <span style={{ color: '#8B949E', fontSize: '0.85rem' }}>Currently active in <strong>Ludhiana, India</strong></span>
+              </div>
+            </div>
+          </motion.div>
 
-          {/* Enhanced Submit Button */}
-          <div className="flex justify-center mt-8 sm:mt-10 lg:mt-12">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative overflow-hidden px-8 sm:px-10 lg:px-12 py-3 sm:py-4 border-2 border-indigo-600 text-indigo-600 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all duration-500 hover:bg-indigo-600 hover:text-white hover:shadow-2xl hover:shadow-indigo-600/25 active:scale-95 transform disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {/* Animated Background Slash */}
-              <div className="absolute inset-0 bg-indigo-600 transform -skew-x-12 -translate-x-full transition-transform duration-500 group-hover:translate-x-0"></div>
-
-              {/* Ripple Effect */}
-              <div className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-200">
-                <div className="absolute top-1/2 left-1/2 w-0 h-0 bg-white/30 rounded-full animate-ping transform -translate-x-1/2 -translate-y-1/2 group-active:w-32 group-active:h-32"></div>
+          {/* FORM PANEL */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="glass"
+            style={{ padding: '3.5rem', borderRadius: '32px' }}
+          >
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="form-row">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Full Name</label>
+                  <input 
+                    type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Dev Vansh"
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none' }}
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Email Address</label>
+                  <input 
+                    type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@tech.com"
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none' }}
+                  />
+                </div>
               </div>
 
-              {/* Particle Effect Container */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`absolute w-1 h-1 bg-indigo-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-all duration-700 delay-${i * 100}`}
-                    style={{
-                      left: `${20 + i * 10}%`,
-                      top: `${Math.random() * 100}%`,
-                      animationDelay: `${i * 0.1}s`,
-                      animationDuration: '1s'
-                    }}
-                  ></div>
-                ))}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Project Brief</label>
+                <textarea 
+                  name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about your vision..." rows="5"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none', resize: 'none' }}
+                />
               </div>
 
-              {/* Button Content */}
-              <span className="relative flex items-center gap-3 z-10">
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    SENDING...
-                  </>
-                ) : (
-                  <>
-                    <span className="relative overflow-hidden">
-                      <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">
-                        SHOOT
-                      </span>
-                      <span className="absolute left-0 top-0 block translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-                        SHOOT
-                      </span>
-                    </span>
+              <motion.button 
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit" disabled={isSubmitting}
+                className="shimmer"
+                style={{
+                  background: '#00FF87', color: '#030708', padding: '1.25rem', borderRadius: '12px',
+                  fontWeight: 800, fontSize: '1rem', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                  boxShadow: '0 10px 30px -10px rgba(0,255,135,0.5)'
+                }}
+              >
+                {isSubmitting ? 'Establishing Protocol...' : <>Execute Transmission <ArrowRight size={20} /></>}
+              </motion.button>
+            </form>
+          </motion.div>
 
-                    {/* Enhanced Arrow with multiple effects */}
-                    <div className="relative">
-                      <ArrowRight className="w-5 h-5 transition-all duration-300 group-hover:translate-x-2 group-hover:scale-110" />
-
-                      {/* Arrow trail effect */}
-                      <ArrowRight className="absolute top-0 left-0 w-5 h-5 opacity-0 transition-all duration-300 group-hover:opacity-50 group-hover:translate-x-1 group-hover:scale-90" />
-                      <ArrowRight className="absolute top-0 left-0 w-5 h-5 opacity-0 transition-all duration-300 group-hover:opacity-25 group-hover:scale-75" />
-                    </div>
-                  </>
-                )}
-              </span>
-
-              {/* Glowing border effect */}
-              <div className="absolute inset-0 border-2 border-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-            </button>
-          </div>
-
-        {/* Decorative Elements */}
-        </form>
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 968px) {
+          .contact-grid { grid-template-columns: 1fr !important; }
+          .form-row { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 };
