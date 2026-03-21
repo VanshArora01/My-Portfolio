@@ -91,7 +91,7 @@ const SectionHeader = ({ title, cmd }) => (
 
 const Resume = () => {
   return (
-    <div style={{ background: '#050A0E', minHeight: '100vh', fontFamily: 'Inter, sans-serif', color: '#CDD9E5', padding: '2rem 1.5rem 6rem 1.5rem' }}>
+    <div className="resume-page-wrapper" style={{ background: '#050A0E', minHeight: '100vh', fontFamily: 'Inter, sans-serif', color: '#CDD9E5' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         
         {/* HEADER SECTION */}
@@ -449,12 +449,47 @@ const Resume = () => {
           color: #00FF87 !important;
         }
 
+        .resume-page-wrapper {
+          padding: 2rem 1.5rem 6rem 1.5rem;
+        }
+
         @media (max-width: 960px) {
           .resume-grid {
             grid-template-columns: 1fr;
           }
           .resume-header {
             padding: 1.5rem;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .resume-page-wrapper {
+            padding: 1.5rem 1.25rem 5rem 1.25rem;
+          }
+          .resume-col {
+            gap: 1rem;
+          }
+          .resume-grid {
+            gap: 1rem;
+          }
+          .resume-header {
+            padding: 1.25rem;
+            flex-direction: column;
+            gap: 1.25rem;
+          }
+          .resume-card {
+            padding: 1rem;
+            border-radius: 16px;
+          }
+          .contact-links {
+            gap: 0.75rem 1rem;
+          }
+          .pdf-actions {
+            width: 100%;
+          }
+          .btn-primary, .btn-secondary {
+            flex: 1;
+            justify-content: center;
           }
         }
       `}</style>

@@ -160,11 +160,31 @@
 
 @media (max-width: 599px) {
   .card-grid {
-    grid-template-columns: 1fr;
-    padding: 0.5em;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0.75em;
+    gap: 0.75rem;
   }
   .magic-bento-card {
-    min-height: 160px;
+    min-height: 120px;
+    padding: 1.25em;
+    border-radius: 20px;
+  }
+  
+  /* Mobile Bento Shape */
+  .magic-bento-card:nth-child(1), /* About */
+  .magic-bento-card:nth-child(4), /* DSA */
+  .magic-bento-card:nth-child(5)  /* Current Project */ {
+    grid-column: span 2;
+  }
+  
+  .magic-bento-card:nth-child(2), /* Core Stack */
+  .magic-bento-card:nth-child(3)  /* Hackathons */ {
+    grid-column: span 1;
+  }
+
+  /* Make smaller cards content shrink slightly */
+  .magic-bento-card__big {
+    font-size: 1.8rem !important;
   }
 }
 

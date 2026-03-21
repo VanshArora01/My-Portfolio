@@ -119,7 +119,7 @@ const ProjectCard = ({ project, onClick }) => {
       layoutId={`card-${project.id}`}
       onClick={() => onClick(project)}
       whileHover={{ y: -10, scale: 1.02 }}
-      className="glass"
+      className="glass work-card"
       style={{
         borderRadius: '32px',
         padding: '2rem',
@@ -292,7 +292,7 @@ const Work = () => {
         </div>
 
         {/* Project Grid */}
-        <div style={{ 
+        <div className="work-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
           gap: '2rem' 
@@ -314,6 +314,24 @@ const Work = () => {
       <style>{`
         @media (max-width: 768px) {
           .modal-content { grid-template-columns: 1fr !important; gap: 2rem !important; }
+        }
+        @media (max-width: 640px) {
+          .work-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+          }
+          .work-card {
+            height: auto !important;
+            min-height: 220px !important;
+            padding: 1.25rem !important;
+            border-radius: 20px !important;
+          }
+          .work-card h3 {
+            font-size: 1.5rem !important;
+          }
+          .work-card > div:first-child {
+            padding: 1rem !important;
+          }
         }
       `}</style>
     </div>

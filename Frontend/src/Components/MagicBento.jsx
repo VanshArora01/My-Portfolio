@@ -228,7 +228,7 @@ const MagicBento = ({
       content: (
         <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
           <p style={{ color: '#4A5568', fontSize: '0.65rem', marginBottom: '0.4rem', letterSpacing: '0.1em' }}>CORE STACK</p>
-          <p style={{ color: '#00FF87', fontSize: '2.8rem', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>MERN</p>
+          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>MERN</p>
           <p style={{ color: '#3BFCFF', fontSize: '1rem', marginTop: '0.25rem' }}>+ AI</p>
         </div>
       )
@@ -238,7 +238,7 @@ const MagicBento = ({
       title: null,
       content: (
         <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
-          <p style={{ color: '#00FF87', fontSize: '2.5rem', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>2× 🏆</p>
+          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>2× 🏆</p>
           <p style={{ color: '#CDD9E5', fontSize: '0.82rem', marginTop: '0.5rem' }}>Hackathon Winner</p>
           <p style={{ color: '#4A5568', fontSize: '0.72rem', marginTop: '0.2rem' }}>DBU 2025 · 1st Place</p>
           <p style={{ color: '#4A5568', fontSize: '0.72rem' }}>PCTE Winner</p>

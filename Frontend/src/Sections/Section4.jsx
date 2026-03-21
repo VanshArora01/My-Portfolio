@@ -28,21 +28,29 @@ const Section4 = () => {
     const loadingToast = toast.loading('Establishing connection...');
 
     try {
-      const response = await fetch(API_ENDPOINTS.CONTACT, {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName, email: trimmedEmail, message: trimmedMessage }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: "e0bc0ce9-110c-4dc6-8f2d-f858d7b5ed46",
+          name: trimmedName,
+          email: trimmedEmail,
+          message: trimmedMessage,
+          subject: `Portfolio Contact from ${trimmedName}`
+        }),
       });
 
-      if (!response.ok) throw new Error('Network error');
-
       const result = await response.json();
+      
       if (result.success) {
         toast.dismiss(loadingToast);
         toast.success('Transmission successful!');
         setFormData({ name: '', email: '', message: '' });
       } else {
-        throw new Error(result.message);
+        throw new Error(result.message || 'Transmission failed');
       }
     } catch (error) {
       toast.dismiss(loadingToast);
@@ -55,11 +63,11 @@ const Section4 = () => {
   return (
     <section id="contact" className="full-screen-section" style={{ position: 'relative' }}>
         <div className="mesh-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
-      <div className="pb-dock" style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
+      <div className="pb-dock contact-container" style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
         
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <span style={{ color: '#00FF87', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase' }}>Connection</span>
-          <h2 className="text-glow" style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800, color: '#F0F6FC', marginTop: '0.5rem' }}>
+          <h2 className="text-glow contact-title" style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800, color: '#F0F6FC', marginTop: '0.5rem' }}>
             Let's Start a <span style={{ color: '#00FF87' }}>Dialogue.</span>
           </h2>
         </div>
@@ -71,7 +79,7 @@ const Section4 = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="glass"
+            className="glass contact-info"
             style={{ padding: '3rem', borderRadius: '32px', display: 'flex', flexDirection: 'column', gap: '2rem' }}
           >
             <div>
@@ -112,7 +120,7 @@ const Section4 = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="glass"
+            className="glass contact-form"
             style={{ padding: '3.5rem', borderRadius: '32px' }}
           >
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -165,6 +173,12 @@ const Section4 = () => {
         @media (max-width: 968px) {
           .contact-grid { grid-template-columns: 1fr !important; }
           .form-row { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 640px) {
+          .contact-container { padding: 0 1rem !important; margin-top: 2rem !important; }
+          .contact-info { padding: 1.5rem !important; gap: 1.5rem !important; border-radius: 20px !important; }
+          .contact-form { padding: 1.5rem !important; border-radius: 20px !important; }
+          .contact-title { font-size: 1.75rem !important; }
         }
       `}</style>
     </section>
