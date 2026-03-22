@@ -75,6 +75,7 @@ const Section2 = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
+          className="stats-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -90,20 +91,20 @@ const Section2 = () => {
             <motion.div 
               key={i} 
               variants={itemVariants}
-              className="glass"
+              className="glass stat-card"
               style={{
                 padding: '3rem 2rem', borderBottom: `4px solid ${stat.color}`,
                 borderRadius: '24px', textAlign: 'center'
               }}
               whileHover={{ y: -10, boxShadow: `0 20px 40px -20px ${stat.color}33` }}
             >
-              <div style={{ color: stat.color, fontSize: '4.5rem', fontWeight: 800, lineHeight: 1, marginBottom: '1rem' }} className="text-glow">
+              <div style={{ color: stat.color, fontSize: '4.5rem', fontWeight: 800, lineHeight: 1, marginBottom: '0.8rem' }} className="text-glow stat-value">
                 {stat.value}
               </div>
-              <div style={{ color: '#F0F6FC', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+              <div style={{ color: '#F0F6FC', fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }} className="stat-label">
                 {stat.label}
               </div>
-              <div style={{ color: '#6E7681', fontSize: '0.85rem' }}>
+              <div style={{ color: '#6E7681', fontSize: '0.9rem' }} className="stat-sub">
                 {stat.sub}
               </div>
             </motion.div>

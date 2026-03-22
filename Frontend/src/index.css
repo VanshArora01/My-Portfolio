@@ -321,3 +321,31 @@ section { padding: 6rem 1.5rem; position: relative; }
     padding: 1rem !important;
   }
 }
+
+/* Stats Section Responsive Fixes */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .stat-card {
+    padding: 2rem 1.5rem !important;
+    border-radius: 20px !important;
+  }
+  .stat-value {
+    font-size: 3.2rem !important;
+  }
+  .stat-label {
+    font-size: 0.95rem !important;
+  }
+  .stat-sub {
+    font-size: 0.75rem !important;
+  }
+}
