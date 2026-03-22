@@ -1,13 +1,35 @@
 import { useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ClickSpark from './Components/ClickSpark';
 import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
 import Home from './Pages/Home';
 import Work from './Pages/Work';
 import Resume from './Pages/Resume';
+import AssistantPage from './Pages/Assistant';
 import ScrollToTop from './Components/ScrollToTop';
 import './App.css';
+
+const AppContent = ({ dotRef, ringRef }) => {
+  const location = useLocation();
+  const hideFooter = location.pathname === '/terminal';
+
+  return (
+    <ClickSpark sparkColor='#00FF87' sparkSize={8} sparkRadius={20} sparkCount={8} duration={500}>
+      <div ref={dotRef} className="cursor-dot" />
+      <div ref={ringRef} className="cursor-ring" />
+      <ScrollToTop />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/work" element={<Work />} />
+        <Route path="/resume" element={<Resume />} />
+        <Route path="/terminal" element={<AssistantPage />} />
+      </Routes>
+      {!hideFooter && <Footer />}
+    </ClickSpark>
+  );
+};
 
 function App() {
   const dotRef = useRef(null);
@@ -46,18 +68,7 @@ function App() {
 
   return (
     <Router>
-      <ClickSpark sparkColor='#00FF87' sparkSize={8} sparkRadius={20} sparkCount={8} duration={500}>
-        <div ref={dotRef} className="cursor-dot" />
-        <div ref={ringRef} className="cursor-ring" />
-        <ScrollToTop />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/resume" element={<Resume />} />
-        </Routes>
-        <Footer />
-      </ClickSpark>
+      <AppContent dotRef={dotRef} ringRef={ringRef} />
     </Router>
   );
 }

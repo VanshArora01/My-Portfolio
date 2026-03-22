@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: vansh-portfolio-backend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://vanshcodes01.onrender.com
+      - key: NODE_ENV
+        value: production

@@ -81,7 +81,7 @@ body {
   100% { text-shadow: 2px 0 #00FF87, -2px 0 #3BFCFF; }
 }
 
-.glitch:hover {
+.glitch {
   animation: glitch 0.3s ease infinite;
 }
 
@@ -99,7 +99,30 @@ body {
 }
 
 @keyframes spin {
+  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes soundWave {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; filter: drop-shadow(0 0 1px rgba(0,255,135,0.5)); }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; filter: none; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+.animate-flicker { animation: flicker 3s infinite; }
+.animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+canvas {
+  outline: none !important;
 }
 
 .glass {
@@ -108,7 +131,38 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(0, 255, 135, 0.4);
+  background: rgba(0, 255, 135, 0.03);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 255, 135, 0.15);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 255, 135, 0.05),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.glass:hover::before {
+  left: 100%;
 }
 
 .text-glow { text-shadow: 0 0 12px var(--green-glow); }
@@ -184,6 +238,16 @@ section { padding: 6rem 1.5rem; position: relative; }
   padding-bottom: 160px !important;
 }
 
+/* Base Mobile Overrides & Hacker Styles */
+
+.desktop-dock {
+  display: block;
+}
+
+.mobile-nav-container {
+  display: none;
+}
+
 @media (max-width: 968px) { 
   .hero-right { display: none !important; } 
   section { padding: 4rem 1.5rem; }
@@ -197,4 +261,63 @@ section { padding: 6rem 1.5rem; position: relative; }
 @media (min-width: 2000px) {
   section { padding: 10rem 0 !important; }
   .hero-container { max-width: 1400px !important; }
+}
+
+/* ULTIMATE MOBILE UX OPTIMIZATION */
+@media (max-width: 768px) {
+  /* Menu Visibility */
+  .desktop-dock { display: none !important; }
+  .mobile-nav-container { display: block !important; }
+  .pb-dock { padding-bottom: 40px !important; }
+
+  /* De-clustering: Layouts & Spacing */
+  section { padding: 2.5rem 1rem !important; }
+  
+  /* Shrink Typography */
+  h1 { font-size: clamp(1.8rem, 8vw, 2.5rem) !important; line-height: 1.1 !important; }
+  h2 { font-size: 1.25rem !important; }
+  h3 { font-size: 1.1rem !important; }
+  p { font-size: 0.85rem !important; line-height: 1.4 !important; }
+  
+  /* Shrink Cards to look sleek, not bulky */
+  .glass, .resume-card, .work-card, [data-glow] {
+    padding: 1rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Specific Resets for specific pages/components */
+  .work-card {
+    min-height: auto !important;
+    height: auto !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .resume-header {
+    padding: 1rem !important;
+    gap: 1rem !important;
+  }
+
+  .grid, .work-grid, .resume-grid {
+    gap: 1rem !important;
+  }
+
+  /* Shrink Buttons and Pills */
+  .btn-primary, .btn-secondary {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Pill lists should be super compact */
+  .skill-pill, [style*="border-radius: 100px"] {
+    padding: 2px 8px !important;
+    font-size: 0.65rem !important;
+  }
+
+  /* Fix Modal clustering */
+  .modal-content {
+    padding: 1rem !important;
+  }
+  .modal-overlay-inner {
+    padding: 1rem !important;
+  }
 }

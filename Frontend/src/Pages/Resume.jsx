@@ -1,496 +1,198 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Download, ExternalLink, Mail, Linkedin, Github, Globe, Phone } from 'lucide-react';
+import { Download, ExternalLink, Mail, Linkedin, Github, Globe, Phone, Cpu, Award, BookOpen, Code, Rocket, Terminal, Zap, Sparkles } from 'lucide-react';
 
-const Section = ({ transitionDelay = 0, children, style, className }) => {
+const Section = ({ transitionDelay = 0, children }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay: transitionDelay }}
-      style={style}
-      className={className}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+      transition={{ duration: 0.6, delay: transitionDelay, ease: [0.23, 1, 0.32, 1] }}
+      style={{ position: 'relative', marginBottom: '4rem' }}
     >
       {children}
     </motion.div>
   );
 };
 
-const SkillPill = ({ children }) => (
-  <span style={{
-    background: '#161B22',
-    border: '1px solid #21262D',
-    color: '#00FF87',
-    padding: '0.25rem 0.75rem',
-    borderRadius: '100px',
-    fontSize: '0.75rem',
-    fontWeight: 600,
-    display: 'inline-block'
-  }}>
+const SkillPill = ({ children, color = '#3BFCFF' }) => (
+  <motion.span
+    whileHover={{ scale: 1.05, y: -2 }}
+    style={{
+      background: 'rgba(255,255,255,0.03)',
+      border: `1px solid ${color}20`,
+      color: color,
+      padding: '6px 14px',
+      borderRadius: '100px',
+      fontSize: '0.72rem',
+      fontWeight: 600,
+      display: 'inline-block',
+      backdropFilter: 'blur(10px)',
+      boxShadow: `0 0 10px ${color}05`
+    }}>
     {children}
-  </span>
+  </motion.span>
 );
 
-const HackathonCard = ({ badge, event, project, date, description, stack, border }) => (
-  <div className="resume-card" style={{ borderLeft: border }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
-      <div style={{ color: '#FFBD2E', fontWeight: 800, fontSize: '0.8rem' }}>{badge}</div>
-      {date && <div style={{ color: '#4A5568', fontSize: '0.8rem', fontFamily: 'JetBrains Mono' }}>{date}</div>}
-    </div>
-    <div style={{ color: '#00FF87', fontWeight: 700, fontSize: '1.2rem', marginBottom: '0.25rem' }}>{event}</div>
-    {project && <div style={{ color: '#CDD9E5', fontWeight: 600, fontSize: '1rem', marginBottom: '0.75rem' }}>{project}</div>}
-    
-    <p style={{ color: '#8B949E', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1rem' }}>{description}</p>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-      {stack.split(' · ').map(s => <SkillPill key={s}>{s}</SkillPill>)}
-    </div>
-  </div>
-);
-
-const ProjectCard = ({ filepath, tag, title, description, arch, stack, links, tagColor = '#3BFCFF' }) => (
-  <div className="resume-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-    <div style={{ fontSize: '0.75rem', color: '#4A5568', marginBottom: '1rem', fontFamily: 'JetBrains Mono' }}>
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ff5f57' }} />
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#febc2e' }} />
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#28c840' }} />
-      </div>
-      {filepath}
-    </div>
-    <div style={{ display: 'flex', gap: '8px', marginBottom: '0.75rem' }}>
-      <span style={{ background: `${tagColor}15`, border: `1px solid ${tagColor}40`, color: tagColor, padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700 }}>{tag}</span>
-    </div>
-    <h3 style={{ color: '#00FF87', fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>{title}</h3>
-    <p style={{ color: '#8B949E', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1rem', flex: 1 }}>{description}</p>
-    {arch && <div style={{ color: '#3BFCFF', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: 1.5, background: '#0D1117', padding: '0.75rem', borderRadius: '8px', border: '1px solid #21262D' }}>{arch}</div>}
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '1rem' }}>
-      {stack.split(' · ').map(s => <SkillPill key={s}>{s}</SkillPill>)}
-    </div>
-    <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
-      {links.map(l => (
-        <a key={l.label} href={l.url} target="_blank" rel="noreferrer" style={{ color: '#3BFCFF', textDecoration: 'none', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }} className="link-hover">
-          {l.label} <ExternalLink size={14} />
-        </a>
-      ))}
-    </div>
-  </div>
-);
-
-const SectionHeader = ({ title, cmd }) => (
-  <div style={{ marginBottom: '1rem' }}>
-    {cmd && <div style={{ color: '#4A5568', fontSize: '0.8rem', marginBottom: '0.25rem', fontFamily: 'JetBrains Mono' }}>&gt; {cmd}</div>}
-    <h2 style={{ color: '#E6EDF3', fontSize: '1.5rem', fontWeight: 700, margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-      <span style={{ color: '#00FF87', marginRight: '8px' }}>~/</span>{title}
-    </h2>
-  </div>
+const TimelineNode = ({ active = false }) => (
+  <div style={{ position: 'absolute', left: '-30px', top: '10px', width: '12px', height: '12px', background: active ? '#00FF87' : '#161B22', border: active ? '3px solid #00FF8744' : '2px solid #30363D', borderRadius: '50%', zIndex: 2, transition: '0.3s' }} />
 );
 
 const Resume = () => {
   return (
-    <div className="resume-page-wrapper" style={{ background: '#050A0E', minHeight: '100vh', fontFamily: 'Inter, sans-serif', color: '#CDD9E5' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        
-        {/* HEADER SECTION */}
-        <Section transitionDelay={0}>
-          <div className="resume-header">
-            <div>
-              <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, color: '#FFFFFF', margin: 0, marginBottom: '0.5rem', lineHeight: 1.1 }}>VANSH ARORA</h1>
-              <div style={{ color: '#00FF87', fontSize: '1rem', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '1.5rem', fontFamily: 'JetBrains Mono' }}>
-                Full Stack Developer · AI Engineer · 2× Hackathon Winner
-              </div>
-              <div className="contact-links">
-                {[
-                  { icon: Mail, label: 'vansharora2310@gmail.com', url: 'mailto:vansharora2310@gmail.com' },
-                  { icon: Linkedin, label: 'linkedin.com/in/vansharora01', url: 'https://linkedin.com/in/vansharora01' },
-                  { icon: Github, label: 'github.com/VanshArora01', url: 'https://github.com/VanshArora01' },
-                  { icon: Globe, label: 'vanshcodes01.onrender.com', url: 'https://vanshcodes01.onrender.com' },
-                  { icon: Phone, label: '+91 7087780200', url: 'tel:+917087780200' },
-                ].map((item, i) => (
-                  <a key={i} href={item.url} target="_blank" rel="noreferrer" className="contact-link">
-                    <item.icon size={14} /> {item.label}
-                  </a>
-                ))}
-              </div>
+    <div className="resume-page-wrapper" style={{ background: '#020408', minHeight: '100vh', fontFamily: '"JetBrains Mono", monospace', color: '#CDD9E5', position: 'relative', overflowX: 'hidden' }}>
+      
+      {/* ── BACKGROUND FX ── */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: '40%', height: '40%', background: 'radial-gradient(circle, rgba(0,255,135,0.08) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+        <div style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: '40%', height: '40%', background: 'radial-gradient(circle, rgba(138,43,226,0.05) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.2, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '50px 50px' }} />
+      </div>
+
+      <div style={{ position: 'fixed', left: '44px', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, rgba(0,255,135,0.2) 20%, rgba(59,252,255,0.2) 80%, transparent)', zIndex: 1 }} className='hide-mobile' />
+
+      <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative', zIndex: 2, padding: '100px 20px 100px 60px' }} className="mobile-padding-res">
+      
+        {/* ── HERO ── */}
+        <section style={{ marginBottom: '6rem' }}>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
+              <Terminal size={20} color="#4A5568" />
+              <span style={{ fontSize: '0.8rem', color: '#4A5568', letterSpacing: '4px' }}>ACCESSING_PERSONA_FILE_V4</span>
             </div>
+            <h1 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 800, color: '#FFF', margin: 0, lineHeight: 0.9, letterSpacing: '-2px' }}>VANSH<br/><span style={{ color: '#00FF87' }}>ARORA.</span></h1>
+            <p style={{ fontSize: '1.2rem', color: '#8B949E', marginTop: '20px', maxWidth: '600px', lineHeight: 1.6 }}>Full-Stack Architect & AI Systems Engineer. Deployed to Ludhiana, India. Building the next generation of neural interfaces.</p>
             
-            <div className="pdf-actions">
-              <motion.a
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                href="/Vansh_Arora_Resume.pdf"
-                download
-                className="btn-primary"
-              >
-                <Download size={18} /> Download PDF
-              </motion.a>
-              <motion.button
-                whileHover={{ scale: 1.02, borderColor: '#00FF87', color: '#00FF87' }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => window.open('/Vansh_Arora_Resume.pdf', '_blank')}
-                className="btn-secondary"
-              >
-                <ExternalLink size={18} /> Full Screen
-              </motion.button>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', marginTop: '40px' }}>
+               {[
+                 { icon: Mail, label: 'vansharora2310@gmail.com', url: 'mailto:vansharora2310@gmail.com' },
+                 { icon: Github, label: 'github/VanshArora01', url: 'https://github.com/VanshArora01' },
+                 { icon: Linkedin, label: 'linkdn/vansharora01', url: 'https://linkedin.com/in/vansharora01' }
+               ].map(link => (
+                 <a key={link.label} href={link.url} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4A5568', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}>
+                   <link.icon size={16} /> {link.label}
+                 </a>
+               ))}
             </div>
+
+            <div style={{ display: 'flex', gap: '20px', marginTop: '50px' }}>
+               <motion.a href="/Vansh_Arora_Resume.pdf" download className="glass" style={{ padding: '12px 32px', border: '1px solid #00FF87', color: '#00FF87', borderRadius: '4px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(0, 255, 135, 0.05)' }}>
+                 <Download size={18} /> DOWNLOAD_DATA
+               </motion.a>
+               <button onClick={() => window.open('/Vansh_Arora_Resume.pdf', '_blank')} className="glass" style={{ padding: '12px 32px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#CDD9E5', borderRadius: '4px', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer' }}>FULL_VIEW</button>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ── CORE STACK ── */}
+        <Section transitionDelay={0.2}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+            <Cpu size={24} color="#00FF87" />
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, textTransform: 'uppercase' }}>Technical Spectrum</h2>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+            {[
+              { label: 'Neural & AI', skills: 'Groq API, Llama-3.3, ML Pipelines, NLP', color: '#3BFCFF' },
+              { label: 'Core Backend', skills: 'Node.js, Express, FastAPI, WebSockets', color: '#8A2BE2' },
+              { label: 'Adaptive UI', skills: 'React, Tailwind, Framer Motion, TypeScript', color: '#00FF87' },
+              { label: 'Data Layers', skills: 'MongoDB, Redis, Mongoose, SQL', color: '#FFBD2E' }
+            ].map(group => (
+              <div key={group.label} className="glass" style={{ padding: '25px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <p style={{ fontSize: '0.7rem', color: '#4A5568', fontWeight: 800, letterSpacing: '2px', marginBottom: '15px' }}>{group.label}</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {group.skills.split(', ').map(s => <SkillPill key={s} color={group.color}>{s}</SkillPill>)}
+                </div>
+              </div>
+            ))}
           </div>
         </Section>
 
-        <div className="resume-grid">
-          {/* LEFT COLUMN */}
-          <div className="resume-col">
-            
-            {/* EDUCATION */}
-            <Section transitionDelay={0.1}>
-              <SectionHeader title="education" cmd="cat education.txt" />
-              <div className="resume-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
-                  <div style={{ color: '#00FF87', fontSize: '1.1rem', fontWeight: 700 }}>PCTE Group of Institutes, Ludhiana</div>
-                  <span style={{ background: 'rgba(0,255,135,0.08)', border: '1px solid rgba(0,255,135,0.3)', color: '#00FF87', padding: '2px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>In Progress</span>
+        {/* ── MISSION LOG (EDUCATION & EXP) ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '80px' }}>
+          
+          <Section transitionDelay={0.3}>
+            <TimelineNode active />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
+              <BookOpen size={20} color="#00FF87" />
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Academic Link</h3>
+            </div>
+            <div style={{ marginLeft: '10px' }} className="glass" style={{ padding: '30px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <h4 style={{ fontSize: '1.4rem', color: '#FFF', margin: 0 }}>PCTE Group of Institutes, Ludhiana</h4>
+              <p style={{ fontSize: '1rem', color: '#4A5568', marginTop: '8px' }}>B.Tech in Computer Science // 2024 - 2027</p>
+              <div style={{ display: 'flex', gap: '20px', marginTop: '25px' }}>
+                <div style={{ padding: '15px 25px', background: 'rgba(0,255,135,0.05)', borderRadius: '12px', border: '1px solid rgba(0,255,135,0.2)' }}>
+                   <p style={{ fontSize: '0.6rem', color: '#00FF87' }}>CGPA_VAL</p>
+                   <p style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFF' }}>7.21/10</p>
                 </div>
-                <div style={{ color: '#E6EDF3', fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>B.Tech — Computer Science & Engineering</div>
-                <div style={{ color: '#8B949E', fontSize: '0.9rem', marginBottom: '0.75rem', fontFamily: 'JetBrains Mono' }}>2024 – 2027 (Currently in 6th Semester)</div>
-                <div style={{ color: '#3BFCFF', fontSize: '0.9rem', fontWeight: 600, fontFamily: 'JetBrains Mono' }}>CGPA: 7.21 / 10</div>
+                {/* <div style={{ padding: '15px 25px', background: 'rgba(59,252,255,0.05)', borderRadius: '12px', border: '1px solid rgba(59,252,255,0.2)' }}>
+                   <p style={{ fontSize: '0.6rem', color: '#3BFCFF' }}>CURRENT_DOMAIN</p>
+                   <p style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFF' }}>U-GRAD</p>
+                </div> */}
               </div>
-            </Section>
+            </div>
+          </Section>
 
-            {/* TECHNICAL SKILLS */}
-            <Section transitionDelay={0.2}>
-              <SectionHeader title="skills" cmd="cat skills.txt" />
-              <div className="resume-card">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {[
-                    { label: 'Languages', skills: 'JavaScript (ES6+), Python' },
-                    { label: 'Frontend', skills: 'React.js, HTML5, CSS3, Tailwind CSS, TypeScript' },
-                    { label: 'Backend', skills: 'Node.js, Express.js, FastAPI, REST, WebSockets, Events' },
-                    { label: 'Database', skills: 'MongoDB, Mongoose, NoSQL Schema, Indexing' },
-                    { label: 'AI / ML', skills: 'Groq API, LLaMA-3.3, Function Calling, ML Integration, Pipelines' },
-                    { label: 'Payments & Tools', skills: 'Razorpay, Git, GitHub, Vercel, Postman, Linux, Brevo SMTP' },
-                  ].map((group, i) => (
-                    <div key={i}>
-                      <div style={{ color: '#CDD9E5', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'JetBrains Mono' }}>{group.label}:</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                        {group.skills.split(', ').map((s, idx) => <SkillPill key={`${s}-${idx}`}>{s}</SkillPill>)}
-                      </div>
-                    </div>
-                  ))}
+          <Section transitionDelay={0.4}>
+            <TimelineNode />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '40px' }}>
+              <Rocket size={20} color="#3BFCFF" />
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Strategic Projects</h3>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+              {[
+                { title: 'DevOS', tag: 'A_AGENTIC', detail: 'Developer Execution Tool', stack: 'Node · React · Groq', desc: 'Eliminates the cold-start problem of new sessions using agentic context persistence.' },
+                { title: 'Anay', tag: 'JARVIS_STYLE', detail: 'Command Assistant', stack: 'WebSockets · LLM', desc: 'Jarvis-style real action executor using natural language parsing.' },
+                { title: 'Disaster Portal', tag: 'HACKATHON_WIN', detail: '1st Place DBU-25', stack: 'Socket.io · MongoDB', desc: 'Real-time multi-crisis coordination system for emergency response.' }
+              ].map(proj => (
+                <div key={proj.title} className="glass" style={{ position: 'relative', padding: '30px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ position: 'absolute', left: 0, top: 20, bottom: 20, width: '4px', background: '#00FF87', borderRadius: '0 4px 4px 0', opacity: 0.5 }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+                    <h4 style={{ fontSize: '2rem', fontWeight: 800, color: '#FFF' }}>{proj.title}</h4>
+                    <span style={{ fontSize: '0.65rem', color: '#00FF87', border: '1px solid #00FF8744', padding: '4px 12px', borderRadius: '4px', fontWeight: 800, letterSpacing: '1px' }}>{proj.tag}</span>
+                  </div>
+                  <p style={{ fontSize: '0.9rem', color: '#4A5568', margin: '0 0 15px', letterSpacing: '1px' }}>{proj.detail} // {proj.stack}</p>
+                  <p style={{ fontSize: '1.05rem', color: '#8B949E', lineHeight: 1.7 }}>{proj.desc}</p>
                 </div>
-              </div>
-            </Section>
+              ))}
+            </div>
+          </Section>
 
-            {/* DSA PROGRESS */}
-            <Section transitionDelay={0.3}>
-              <SectionHeader title="dsa-progress" cmd="cat dsa.txt" />
-              <div className="resume-card">
-                <p style={{ color: '#8B949E', fontSize: '0.9rem', marginBottom: '1.5rem', fontStyle: 'italic' }}>"Actively solving problems on LeetCode in JavaScript."</p>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div>
-                    <div style={{ color: '#00FF87', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'JetBrains Mono' }}>SOLID:</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {['Arrays', 'Strings', 'Hash Maps', 'Two Pointers', 'Sliding Window'].map(s => (
-                        <span key={s} style={{ background: '#00FF8710', border: '1px solid #00FF8740', color: '#00FF87', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>{s}</span>
-                      ))}
-                    </div>
+          <Section transitionDelay={0.6}>
+             <TimelineNode />
+             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+                <Award size={20} color="#FFBD2E" />
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Hall of Fame</h3>
+             </div>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '25px' }}>
+                {[
+                  { title: '🏆 1st Place - DBU Hackathon 2025', desc: 'National level win for excellence in emergency response automation.', color: '#FFBD2E' },
+                  { title: '🏆 PCTE Hackathon Winner 2024', desc: 'Winner of internal institute hackathon for full-stack engineering.', color: '#00FF87' },
+                  { title: '📜 Ethical Hacking Certification', desc: 'Certified in penetration testing and offensive security systems.', color: '#3BFCFF' },
+                  { title: '💡 AI Ideathon Participant', desc: 'Selected participant for rapid prototyping of generative AI agents.', color: '#8A2BE2' }
+                ].map((cert, i) => (
+                  <div key={i} className="glass" style={{ padding: '30px', background: `${cert.color}05`, border: `1px dashed ${cert.color}44`, borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                     <Sparkles size={18} color={cert.color} />
+                     <h4 style={{ color: '#FFF', fontSize: '1.1rem', fontWeight: 800 }}>{cert.title}</h4>
+                     <p style={{ fontSize: '0.85rem', color: '#8B949E', lineHeight: 1.5 }}>{cert.desc}</p>
                   </div>
-
-                  <div>
-                    <div style={{ color: '#3BFCFF', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'JetBrains Mono' }}>IN PROGRESS:</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {['Recursion', 'Binary Trees', 'BFS/DFS', 'Graph Traversal'].map(s => (
-                        <span key={s} style={{ background: '#3BFCFF10', border: '1px solid #3BFCFF40', color: '#3BFCFF', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>{s}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div style={{ color: '#8B949E', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'JetBrains Mono' }}>UPCOMING:</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {['Dynamic Programming', 'Backtracking', 'Advanced Graphs'].map(s => (
-                        <span key={s} style={{ background: '#21262D', border: '1px solid #30363D', color: '#8B949E', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #21262D' }}>
-                  <div style={{ color: '#CDD9E5', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.75rem', fontFamily: 'JetBrains Mono' }}>DSA Journey Progress</div>
-                  <div style={{ display: 'flex', gap: '4px', height: '6px' }}>
-                    <div style={{ flex: 1, background: '#00FF87', borderRadius: '2px' }} />
-                    <div style={{ flex: 1, background: '#00FF87', borderRadius: '2px' }} />
-                    <div style={{ flex: 1, background: '#00FF87', borderRadius: '2px' }} />
-                    <div style={{ flex: 1, background: '#21262D', borderRadius: '2px', position: 'relative', overflow: 'hidden' }}>
-                      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '60%', background: '#3BFCFF' }} />
-                    </div>
-                    <div style={{ flex: 1, background: '#21262D', borderRadius: '2px' }} />
-                  </div>
-                </div>
-              </div>
-            </Section>
-
-            {/* TRAINING */}
-            <Section transitionDelay={0.4}>
-              <SectionHeader title="training" cmd="cat training.txt" />
-              <div className="resume-card">
-                <div style={{ color: '#00FF87', fontSize: '1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Full Stack Development</div>
-                <div style={{ color: '#E6EDF3', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>Sensation Software</div>
-                <div style={{ color: '#8B949E', fontSize: '0.8rem', marginBottom: '0.75rem', fontFamily: 'JetBrains Mono' }}>Summer 2024</div>
-                <p style={{ color: '#8B949E', fontSize: '0.85rem', lineHeight: 1.6 }}>Covered REST API design, MVC architecture, MongoDB integrations, and production workflows.</p>
-              </div>
-            </Section>
-
-            {/* LEARNING NOW */}
-            <Section transitionDelay={0.5} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-               <SectionHeader title="learning-now" cmd="> actively improving" />
-               <div className="resume-card" style={{ display: 'flex', alignContent: 'flex-start', flexWrap: 'wrap', gap: '8px', flex: 1 }}>
-                {['DSA in JS', 'System Design', 'TypeScript Adv.', 'LLM Fine-tuning', 'Electron.js', 'Local AI Models'].map(s => (
-                  <span key={s} style={{ background: '#3BFCFF10', border: '1px solid #3BFCFF30', color: '#3BFCFF', padding: '6px 12px', borderRadius: '100px', fontSize: '0.8rem', fontWeight: 600, fontFamily: 'JetBrains Mono' }}>{s}</span>
                 ))}
-              </div>
-            </Section>
+             </div>
+          </Section>
 
-          </div>
-
-          {/* RIGHT COLUMN */}
-          <div className="resume-col">
-            
-            {/* PROJECTS */}
-            <Section transitionDelay={0.4}>
-              <SectionHeader title="projects" cmd="ls -la ~/projects" />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <ProjectCard
-                  filepath="~/projects/devos"
-                  tag="🚧 Personal · In Development"
-                  title="DevOS — Developer Execution Continuity Tool"
-                  description="Solves the cold-start problem developers face every session. Persists project context, tasks, Git state, and session history so you never lose momentum between coding sessions."
-                  arch="▸ Groq LLaMA-3.3-70b with 4 agentic function-calling tools: create_reminder, mark_milestone_done, log_work_session, send_standup_email"
-                  stack="React · TypeScript · Node.js · MongoDB · Groq · Brevo SMTP · Recharts"
-                  links={[{ label: 'GitHub', url: 'https://github.com/VanshArora01' }]}
-                  tagColor="#3BFCFF"
-                />
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-                  <ProjectCard
-                    filepath="~/projects/khudkojano"
-                    tag="💼 Client Project"
-                    title="KhudKoJano — AI Astrology"
-                    description="Production subscription platform with Razorpay integration and automated AI PDF generation."
-                    stack="React · Node.js · Razorpay · LLM · PDF"
-                    links={[{ label: 'Live', url: 'https://khudkojano.onrender.com' }]}
-                    tagColor="#8A2BE2"
-                  />
-                  <ProjectCard
-                    filepath="~/projects/anay"
-                    tag="🏆 Hackathon Project"
-                    title="Anay — Conversational AI"
-                    description="Jarvis-style AI assistant executing real actions with natural voice interaction."
-                    stack="React · Node.js · LLM · WebSockets"
-                    links={[{ label: 'Live', url: 'https://anay-6p54.onrender.com' }]}
-                    tagColor="#00FF87"
-                  />
-                </div>
-                
-                <ProjectCard
-                  filepath="~/projects/disaster-mgmt"
-                  tag="🏆 1st Place — DBU Hackathon 2025"
-                  title="Disaster Management Portal"
-                  description="Dual-portal system (Admin + User) for real-time disaster response coordination. Eliminates polling with active WebSockets for high-frequency emergency updates."
-                  stack="React · Node.js · WebSockets · socket.io · MongoDB · JWT"
-                  links={[{ label: 'GitHub', url: 'https://github.com/VanshArora01' }]}
-                  tagColor="#FFBD2E"
-                />
-              </div>
-            </Section>
-
-            {/* HACKATHONS */}
-            <Section transitionDelay={0.5}>
-              <SectionHeader title="hackathon-wins" cmd="cat achievements.txt" />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <HackathonCard
-                  badge="🏆 1ST PLACE"
-                  event="Desh Bhagat University Hackathon"
-                  project="Disaster Management Portal"
-                  date="2025"
-                  description="Built a dual-portal real-time system with WebSocket-based live alerts, RBAC, multi-severity event classification, and analytics dashboard."
-                  stack="React · Node.js · WebSockets · MongoDB"
-                  border="3px solid #FFBD2E"
-                />
-                <HackathonCard
-                  badge="🏆 WINNER"
-                  event="PCTE Group of Institutes Hackathon"
-                  project="Full Stack Web Application"
-                  date="2024"
-                  description="Won the internal hackathon, demonstrating rapid full-stack prototyping under intense time constraints."
-                  stack="React · Node.js · MongoDB"
-                  border="3px solid #00FF87"
-                />
-              </div>
-            </Section>
-
-            {/* CERTIFICATIONS */}
-            <Section transitionDelay={0.7} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <SectionHeader title="certifications" cmd="cat certs.txt" />
-              <div className="resume-card" style={{ flex: 1 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {[
-                    '🏆 1st Place — DBU Hackathon 2025 (Disaster Management)',
-                    '🏆 PCTE Hackathon Winner',
-                    '📜 Ethical Hacking Workshop — Certificate of Participation',
-                    '💡 Ideathon — Certificate of Participation',
-                  ].map((cert, i) => (
-                    <div key={i} style={{ color: '#E6EDF3', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ color: '#00FF87', fontWeight: 800 }}>&gt;</span> {cert}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Section>
-
-          </div>
         </div>
       </div>
 
       <style>{`
-        .resume-header {
-          background: #0D1117;
-          border: 1px solid #30363D;
-          border-radius: 16px;
-          padding: 2.5rem;
-          margin-bottom: 2rem;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 2rem;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .contact-links {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem 1.5rem;
-        }
-        .contact-link {
-          color: #8B949E;
-          text-decoration: none;
-          font-size: 0.85rem;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-family: 'JetBrains Mono', monospace;
-          transition: color 0.2s ease;
-        }
-        .contact-link:hover {
-          color: #00FF87;
-        }
-        .pdf-actions {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-        .btn-primary {
-          background: #00FF87;
-          color: #050A0E;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          font-weight: 700;
-          font-size: 0.9rem;
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border: 1px solid #00FF87;
-          transition: all 0.2s ease;
-        }
-        .btn-secondary {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid #30363D;
-          color: #CDD9E5;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          font-weight: 700;
-          font-size: 0.9rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          backdrop-filter: blur(10px);
-          transition: all 0.2s ease;
-        }
-        
-        .resume-grid {
-          display: grid;
-          grid-template-columns: 1fr 1.6fr; /* Left col a bit narrower */
-          gap: 2rem;
-        }
-        .resume-col {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-          height: 100%;
-        }
-
-        .resume-card {
-          background: rgba(13, 17, 23, 0.6);
-          backdrop-filter: blur(10px);
-          border: 1px solid #30363D;
-          border-radius: 12px;
-          padding: 1.5rem;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .resume-card:hover {
-          border-color: #00FF8780;
-          background: rgba(13, 17, 23, 0.9);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-        .link-hover:hover {
-          color: #00FF87 !important;
-        }
-
-        .resume-page-wrapper {
-          padding: 2rem 1.5rem 6rem 1.5rem;
-        }
-
-        @media (max-width: 960px) {
-          .resume-grid {
-            grid-template-columns: 1fr;
-          }
-          .resume-header {
-            padding: 1.5rem;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .resume-page-wrapper {
-            padding: 1.5rem 1.25rem 5rem 1.25rem;
-          }
-          .resume-col {
-            gap: 1rem;
-          }
-          .resume-grid {
-            gap: 1rem;
-          }
-          .resume-header {
-            padding: 1.25rem;
-            flex-direction: column;
-            gap: 1.25rem;
-          }
-          .resume-card {
-            padding: 1rem;
-            border-radius: 16px;
-          }
-          .contact-links {
-            gap: 0.75rem 1rem;
-          }
-          .pdf-actions {
-            width: 100%;
-          }
-          .btn-primary, .btn-secondary {
-            flex: 1;
-            justify-content: center;
-          }
+        @media (max-width: 768px) {
+          .mobile-padding-res { padding: 40px 20px 100px 30px !important; }
+          .hide-mobile { display: none !important; }
+          .resume-page-wrapper section { margin-bottom: 3rem !important; }
+          h1 { font-size: 3.5rem !important; }
+          .glass { padding: 20px !important; }
         }
       `}</style>
     </div>

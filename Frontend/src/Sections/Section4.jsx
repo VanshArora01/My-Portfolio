@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { API_ENDPOINTS } from '../config';
+import { ArrowRight, Terminal as TerminalIcon } from 'lucide-react';
+import { API_ENDPOINTS, WEB3FORMS_KEY } from '../config';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
+import NeuralHack from '../Components/NeuralHack';
+import SnakeGame from '../Components/SnakeGame';
 
 const Section4 = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -20,22 +22,22 @@ const Section4 = () => {
     const trimmedMessage = formData.message.trim();
     
     if (!trimmedName || !trimmedEmail || !trimmedMessage) {
-      toast.error('Please fill in all fields');
+      toast.error('ERR: INCOMPLETE DATA PAYLOAD');
       return;
     }
 
     setIsSubmitting(true);
-    const loadingToast = toast.loading('Establishing connection...');
+    const loadingToast = toast.loading('Establishing secure connection...');
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          access_key: "e0bc0ce9-110c-4dc6-8f2d-f858d7b5ed46",
+          access_key: WEB3FORMS_KEY,
           name: trimmedName,
           email: trimmedEmail,
           message: trimmedMessage,
@@ -47,140 +49,158 @@ const Section4 = () => {
       
       if (result.success) {
         toast.dismiss(loadingToast);
-        toast.success('Transmission successful!');
+        toast.success('TRANSMISSION SUCCESSFUL.');
         setFormData({ name: '', email: '', message: '' });
       } else {
         throw new Error(result.message || 'Transmission failed');
       }
     } catch (error) {
       toast.dismiss(loadingToast);
-      toast.error('Transmission failed. Try again.');
+      toast.error('CRITICAL: TRANSMISSION FAILED.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="full-screen-section" style={{ position: 'relative' }}>
-        <div className="mesh-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
-      <div className="pb-dock contact-container" style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
+    <section id="contact" className="full-screen-section" style={{ position: 'relative', background: '#030708', overflow: 'hidden', padding: '2rem 1rem' }}>
+      {/* Background Matrix-like grid */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.05, backgroundImage: 'linear-gradient(#00FF87 1px, transparent 1px), linear-gradient(90deg, #00FF87 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      
+      <div className="pb-dock contact-container" style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', position: 'relative', zIndex: 1, paddingBottom: '2rem' }}>
         
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span style={{ color: '#00FF87', fontSize: '0.85rem', fontWeight: 600, letterSpacing: '0.3em', textTransform: 'uppercase' }}>Connection</span>
-          <h2 className="text-glow contact-title" style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800, color: '#F0F6FC', marginTop: '0.5rem' }}>
-            Let's Start a <span style={{ color: '#00FF87' }}>Dialogue.</span>
-          </h2>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <motion.div initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span style={{ color: '#00FF87', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase' }}>SYS.CONTACT_PROTOCOL</span>
+            <h2 className="text-glow glitch contact-title" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: 800, color: '#F0F6FC', marginTop: '0.2rem', display: 'inline-block', cursor: 'pointer' }}>
+              INITIALIZE <span style={{ color: '#00FF87' }}>CONNECTION</span>
+            </h2>
+          </motion.div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }} className="contact-grid">
-          
-          {/* INFO PANEL */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="glass contact-info"
-            style={{ padding: '3rem', borderRadius: '32px', display: 'flex', flexDirection: 'column', gap: '2rem' }}
-          >
-            <div>
-              <h3 style={{ color: '#F0F6FC', fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>Collaboration Hub</h3>
-              <p style={{ color: '#8B949E', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Whether you have a groundbreaking idea or a complex system that needs scaling, I'm here to build it with you.
-              </p>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          style={{ 
+            background: 'rgba(5, 10, 14, 0.8)', 
+            border: '1px solid #00FF87', 
+            borderRadius: '10px',
+            boxShadow: '0 0 30px rgba(0, 255, 135, 0.08)',
+            overflow: 'hidden',
+            backdropFilter: 'blur(10px)',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}
+        >
+          {/* Terminal Header */}
+          <div style={{ padding: '8px 16px', background: 'rgba(0, 255, 135, 0.1)', borderBottom: '1px solid #00FF87', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#FF5F56' }} />
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#FFBD2E' }} />
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#27C93F' }} />
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {[
-                { label: 'Primary Email', value: 'vansharora2310@gmail.com', href: 'mailto:vansharora2310@gmail.com', color: '#00FF87' },
-                { label: 'Developer profile', value: 'github.com/VanshArora01', href: 'https://github.com/VanshArora01', color: '#3BFCFF' },
-                { label: 'Professional network', value: 'linkedin.com/in/vansharora01', href: 'https://linkedin.com/in/vansharora01', color: '#8A2BE2' }
-              ].map((item, i) => (
-                <div key={i}>
-                  <div style={{ color: '#6E7681', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{item.label}</div>
-                  <a href={item.href} target="_blank" rel="noreferrer" style={{ 
-                    color: '#CDD9E5', textDecoration: 'none', fontSize: '1rem', fontWeight: 600,
-                    transition: 'color 0.2s'
-                  }} onMouseEnter={e => e.currentTarget.style.color = item.color} onMouseLeave={e => e.currentTarget.style.color = '#CDD9E5'}>
-                    {item.value}
-                  </a>
-                </div>
-              ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00FF87', fontFamily: '"JetBrains Mono", monospace', fontSize: '0.75rem' }}>
+              <TerminalIcon size={12} /> ssh root@vansh.dev
             </div>
+            <div style={{ width: '34px' }} /> {/* Spacer */}
+          </div>
 
-            <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#00FF87' }} className="pulse-dot" />
-                <span style={{ color: '#8B949E', fontSize: '0.85rem' }}>Currently active in <strong>Ludhiana, India</strong></span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* FORM PANEL */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="glass contact-form"
-            style={{ padding: '3.5rem', borderRadius: '32px' }}
-          >
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="form-row">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Full Name</label>
-                  <input 
-                    type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Dev Vansh"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none' }}
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Email Address</label>
-                  <input 
-                    type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@tech.com"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none' }}
-                  />
-                </div>
+          <div style={{ padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ color: '#00FF87', fontSize: '0.85rem', fontFamily: '"JetBrains Mono", monospace' }}>
+                  $ enter_identifier: <span className="blink">_</span>
+                </label>
+                <input 
+                  type="text" name="name" value={formData.name} onChange={handleChange} placeholder="[ YOUR NAME ]"
+                  autoComplete="off"
+                  style={{ 
+                    background: 'transparent', border: 'none', borderBottom: '1px dashed #00FF87', 
+                    padding: '0.25rem 0', color: '#CDD9E5', outline: 'none', fontSize: '0.9rem',
+                    fontFamily: '"JetBrains Mono", monospace', transition: 'border-color 0.3s'
+                  }}
+                  onFocus={(e) => e.target.style.borderBottom = '1px solid #3BFCFF'}
+                  onBlur={(e) => e.target.style.borderBottom = '1px dashed #00FF87'}
+                />
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <label style={{ color: '#F0F6FC', fontSize: '0.85rem', fontWeight: 600 }}>&gt; Project Brief</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ color: '#00FF87', fontSize: '0.85rem', fontFamily: '"JetBrains Mono", monospace' }}>
+                  $ enter_comms_link: <span className="blink">_</span>
+                </label>
+                <input 
+                  type="email" name="email" value={formData.email} onChange={handleChange} placeholder="[ EMAIL ADDRESS ]"
+                  autoComplete="off"
+                  style={{ 
+                    background: 'transparent', border: 'none', borderBottom: '1px dashed #00FF87', 
+                    padding: '0.25rem 0', color: '#CDD9E5', outline: 'none', fontSize: '0.9rem',
+                    fontFamily: '"JetBrains Mono", monospace', transition: 'border-color 0.3s'
+                  }}
+                  onFocus={(e) => e.target.style.borderBottom = '1px solid #3BFCFF'}
+                  onBlur={(e) => e.target.style.borderBottom = '1px dashed #00FF87'}
+                />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ color: '#00FF87', fontSize: '0.85rem', fontFamily: '"JetBrains Mono", monospace' }}>
+                  $ inject_payload: <span className="blink">_</span>
+                </label>
                 <textarea 
-                  name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about your vision..." rows="5"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '1rem', color: '#CDD9E5', outline: 'none', resize: 'none' }}
+                  name="message" value={formData.message} onChange={handleChange} placeholder="[ ENTER PROJECT DETAILS... ]" rows="3"
+                  style={{ 
+                    background: 'rgba(0, 255, 135, 0.02)', border: '1px dashed #00FF87', borderRadius: '4px',
+                    padding: '0.75rem', color: '#00FF87', outline: 'none', resize: 'none', fontSize: '0.9rem',
+                    fontFamily: '"JetBrains Mono", monospace', transition: 'all 0.3s'
+                  }}
+                  onFocus={(e) => e.target.style.border = '1px solid #3BFCFF'}
+                  onBlur={(e) => e.target.style.border = '1px dashed #00FF87'}
                 />
               </div>
 
               <motion.button 
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.01, backgroundColor: '#3BFCFF', color: '#030708', boxShadow: '0 0 15px #3BFCFF' }}
+                whileTap={{ scale: 0.99 }}
                 type="submit" disabled={isSubmitting}
-                className="shimmer"
                 style={{
-                  background: '#00FF87', color: '#030708', padding: '1.25rem', borderRadius: '12px',
-                  fontWeight: 800, fontSize: '1rem', border: 'none', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-                  boxShadow: '0 10px 30px -10px rgba(0,255,135,0.5)'
+                  background: 'transparent', color: '#00FF87', padding: '0.75rem', borderRadius: '4px',
+                  fontWeight: 800, fontSize: '0.9rem', border: '1px solid #00FF87', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  fontFamily: '"JetBrains Mono", monospace', textTransform: 'uppercase', transition: 'all 0.3s'
                 }}
               >
-                {isSubmitting ? 'Establishing Protocol...' : <>Execute Transmission <ArrowRight size={20} /></>}
+                {isSubmitting ? '[ EXECUTING... ]' : <>[ EXECUTE_TRANSMISSION ] <ArrowRight size={16} /></>}
               </motion.button>
             </form>
+          </div>
+        </motion.div>
+        
+        {/* 🎮 INTERACTIVE GAMING DECK */}
+        <div style={{ marginTop: '6rem', textAlign: 'center' }}>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ marginBottom: '3rem' }}>
+            <h3 style={{ fontFamily: 'monospace', color: '#00FF87', fontSize: '1.2rem', fontWeight: 800, letterSpacing: '4px' }}>[ V.A.I_GAMING_DECK ]</h3>
+            <p style={{ color: '#4A5568', fontSize: '0.8rem', marginTop: '10px' }}>ESTABLISHING_NEURAL_RECREATION_STREAM...</p>
           </motion.div>
-
+          
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'row', 
+            flexWrap: 'wrap', 
+            gap: '30px', 
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <div style={{ flex: '1 1 400px', maxWidth: '800px' }}>
+              <NeuralHack />
+            </div>
+            <div style={{ flex: '1 1 400px', maxWidth: '800px' }}>
+              <SnakeGame />
+            </div>
+          </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 968px) {
-          .contact-grid { grid-template-columns: 1fr !important; }
-          .form-row { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 640px) {
-          .contact-container { padding: 0 1rem !important; margin-top: 2rem !important; }
-          .contact-info { padding: 1.5rem !important; gap: 1.5rem !important; border-radius: 20px !important; }
-          .contact-form { padding: 1.5rem !important; border-radius: 20px !important; }
-          .contact-title { font-size: 1.75rem !important; }
-        }
-      `}</style>
     </section>
   );
 };
