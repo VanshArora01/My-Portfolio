@@ -201,7 +201,7 @@ const Modal = ({ project, onClose }) => {
           <X size={24} />
         </button>
 
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="modal-header-container" style={{ marginBottom: '1.5rem', paddingRight: '2rem' }}>
           <span style={{ color: project.accent, fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.25em' }}>
             {project.subtitle}
           </span>
@@ -215,9 +215,11 @@ const Modal = ({ project, onClose }) => {
               {project.longDescription}
             </p>
 
-            <h4 style={{ color: '#F0F6FC', marginBottom: '0.5rem', fontSize: '1rem' }}>System Architecture</h4>
-            <div className="glass" style={{ padding: '1.25rem', borderRadius: '16px', borderLeft: `4px solid ${project.accent}` }}>
-               <p style={{ color: '#CDD9E5', fontSize: '0.88rem', lineHeight: 1.5 }}>{project.arch}</p>
+            <div className="modal-extra-info">
+              <h4 style={{ color: '#F0F6FC', marginBottom: '0.5rem', fontSize: '1rem' }}>System Architecture</h4>
+              <div className="glass" style={{ padding: '1.25rem', borderRadius: '16px', borderLeft: `4px solid ${project.accent}` }}>
+                <p style={{ color: '#CDD9E5', fontSize: '0.88rem', lineHeight: 1.5 }}>{project.arch}</p>
+              </div>
             </div>
           </div>
 
@@ -314,6 +316,9 @@ const Work = () => {
       <style>{`
         @media (max-width: 768px) {
           .modal-content { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .modal-extra-info { display: none; }
+          .modal-header-container { padding-right: 3.5rem !important; }
+          .modal-header-container h2 { font-size: 1.8rem !important; }
         }
         @media (max-width: 640px) {
           .work-grid {

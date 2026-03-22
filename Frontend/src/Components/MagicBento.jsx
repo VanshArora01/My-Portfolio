@@ -213,11 +213,9 @@ const MagicBento = ({
       title: null,
       content: (
         <div>
-          <p style={{ color: '#4A5568', fontSize: '0.7rem', marginBottom: '0.5rem' }}>&gt; cat about.txt</p>
+          <p style={{ color: '#4A5568', fontSize: '0.7rem', marginBottom: '0.5rem' }}>&gt; query developer_profile</p>
           <p style={{ color: '#CDD9E5', fontSize: '0.85rem', lineHeight: 1.8 }}>
-            I'm a full-stack developer who ships things people actually use. 3 production apps for real clients, 2 hackathon wins, and an AI developer tool in active development. I make{' '}
-            <span style={{ color: '#00FF87', fontWeight: 600 }}>architectural decisions</span>
-            {' '}and own them.
+            A Full Stack Architect bridging the gap between <span style={{ color: '#3BFCFF' }}>Agentic AI</span> and production ecosystems. With 3 client-validated platforms and 2 national hackathon wins, I engineer systems that prioritize <span style={{ color: '#00FF87', fontWeight: 600 }}>computational efficiency</span> and cinematic user experiences.
           </p>
         </div>
       )
@@ -227,9 +225,12 @@ const MagicBento = ({
       title: null,
       content: (
         <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
-          <p style={{ color: '#4A5568', fontSize: '0.65rem', marginBottom: '0.4rem', letterSpacing: '0.1em' }}>CORE STACK</p>
-          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>MERN</p>
-          <p style={{ color: '#3BFCFF', fontSize: '1rem', marginTop: '0.25rem' }}>+ AI</p>
+          <p style={{ color: '#4A5568', fontSize: '0.65rem', marginBottom: '0.8rem', letterSpacing: '0.1em' }}>NEURAL ENGINE STACK</p>
+          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 900, lineHeight: 1, fontFamily: 'JetBrains Mono', fontSize: '1.8rem' }}>MERN+AI</p>
+          <div style={{ marginTop: '0.5rem', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+            <span style={{ color: '#3BFCFF', fontSize: '0.6rem', border: '1px solid rgba(59, 252, 255, 0.2)', padding: '2px 6px', borderRadius: '4px' }}>LLAMA-3.3</span>
+            <span style={{ color: '#3BFCFF', fontSize: '0.6rem', border: '1px solid rgba(59, 252, 255, 0.2)', padding: '2px 6px', borderRadius: '4px' }}>GROQ</span>
+          </div>
         </div>
       )
     },
@@ -237,49 +238,29 @@ const MagicBento = ({
       label: 'HACKATHONS',
       title: null,
       content: (
-        <div style={{ textAlign: 'center', padding: '0.25rem 0' }}>
-          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 700, lineHeight: 1, fontFamily: 'JetBrains Mono' }}>2× 🏆</p>
-          <p style={{ color: '#CDD9E5', fontSize: '0.82rem', marginTop: '0.5rem' }}>Hackathon Winner</p>
-          <p style={{ color: '#4A5568', fontSize: '0.72rem', marginTop: '0.2rem' }}>DBU 2025 · 1st Place</p>
-          <p style={{ color: '#4A5568', fontSize: '0.72rem' }}>PCTE Winner</p>
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, paddingTop: isMobile ? '0rem' : '1rem' }}>
+          <p className="magic-bento-card__big" style={{ color: '#00FF87', fontWeight: 800, lineHeight: 1, fontFamily: 'JetBrains Mono', fontSize: isMobile ? '1.8rem' : '2.5rem', marginBottom: '0.25rem' }}>2× 🥇</p>
+          <p style={{ color: '#E6EDF3', fontWeight: 700, fontSize: isMobile ? '0.75rem' : '0.88rem', letterSpacing: '0.05em' }}>PRESTIGIOUS VICTORIES</p>
+          <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <p style={{ color: '#8B949E', fontSize: '0.72rem' }}>DBU 2025 • <span style={{ color: '#00FF87' }}>Champion</span></p>
+            <p style={{ color: '#8B949E', fontSize: '0.72rem' }}>PCTE Group • <span style={{ color: '#00FF87' }}>Winner</span></p>
+          </div>
+          {!isMobile && <p style={{ color: '#4A5568', fontSize: '0.65rem', marginTop: '1rem', fontStyle: 'italic' }}>"Engineering solutions under extreme pressure."</p>}
         </div>
       )
     },
-    // {
-    //   label: 'PAYMENTS',
-    //   title: null,
-    //   content: (
-    //     <div>
-    //       <p style={{ color: '#4A5568', fontSize: '0.65rem', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>PAYMENTS</p>
-    //       <p style={{ fontSize: '1.4rem', marginBottom: '0.3rem' }}>💳</p>
-    //       <p style={{ color: '#E6EDF3', fontWeight: 600, fontSize: '0.9rem' }}>Razorpay Integrated</p>
-    //       <p style={{ color: '#4A5568', fontSize: '0.75rem', marginTop: '0.3rem', lineHeight: 1.5 }}>Real transaction flows on production apps</p>
-    //     </div>
-    //   )
-    // },
-    // {
-    //   label: 'STATUS',
-    //   title: null,
-    //   content: (
-    //     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-    //       <span className="pulse-ring" style={{ marginTop: '3px' }} />
-    //       <div>
-    //         <p style={{ color: '#00FF87', fontWeight: 600, fontSize: '0.9rem' }}>Open to Remote</p>
-    //         <p style={{ color: '#4A5568', fontSize: '0.75rem', marginTop: '0.3rem' }}>Ludhiana, Punjab 🇮🇳</p>
-    //         <p style={{ color: '#4A5568', fontSize: '0.72rem', marginTop: '0.2rem' }}>Available for work</p>
-    //       </div>
-    //     </div>
-    //   )
-    // },
     {
-      label: 'DSA',
+      label: 'ALGORITHMS',
       title: null,
       content: (
-        <div>
-          <p style={{ color: '#4A5568', fontSize: '0.65rem', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>DSA PROGRESS</p>
-          <p style={{ color: '#E6EDF3', fontWeight: 600, fontSize: '0.85rem' }}>⚡ LeetCode Active</p>
-          <p style={{ color: '#4A5568', fontSize: '0.72rem', marginTop: '0.3rem', lineHeight: 1.6 }}>Arrays · Hash Maps · Two Pointers · Sliding Window</p>
-          <div style={{ display: 'flex', gap: '4px', marginTop: '0.75rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, paddingTop: isMobile ? '0' : '1rem' }}>
+          <p style={{ color: '#E6EDF3', fontWeight: 700, fontSize: '1rem' }}>⚡ Advanced Problem Solving</p>
+          <p style={{ color: '#8B949E', fontSize: '0.82rem', marginTop: '0.5rem', lineHeight: 1.6 }}>
+            {isMobile 
+              ? "Optimizing Time Complexity across Arrays, Hash Maps, & Sliding Windows." 
+              : "Optimizing Time Complexity across Arrays, Hash Maps, & Sliding Windows for high-performance data processing."}
+          </p>
+          <div style={{ display: 'flex', gap: '4px', marginTop: '1rem' }}>
             {[1,2,3,4,5].map(i => (
               <div key={i} style={{ height: '5px', width: '24px', borderRadius: '3px', background: i <= 3 ? '#00FF87' : '#21262D' }} />
             ))}
@@ -288,21 +269,19 @@ const MagicBento = ({
       )
     },
     {
-      label: 'CURRENT PROJECT',
+      label: 'PRODUCTION',
       title: null,
       content: (
-        <div>
-          <p style={{ color: '#4A5568', fontSize: '0.72rem', marginBottom: '0.6rem' }}>&gt; ls ~/projects/current</p>
-          <p style={{ color: '#00FF87', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.4rem' }}>DevOS — Developer OS</p>
-          <p style={{ color: '#CDD9E5', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '0.6rem' }}>
-            Agentic AI · 4 function-calling tools · Recharts dashboards · Brevo SMTP · Real-time context persistence across dev sessions
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <p style={{ color: '#00FF87', fontWeight: 800, fontSize: '1.2rem', marginBottom: '0.4rem', letterSpacing: '-0.02em' }}>Impactful Deployments</p>
+          <p style={{ color: '#CDD9E5', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>
+            {isMobile 
+              ? "Architected and deployed 10+ Production Applications with 99.9% uptime." 
+              : "Successfully architected and deployed 10+ Production Applications for diverse clients, maintaining 99.9% uptime and high-performance throughput."}
           </p>
-          <p style={{ color: '#3BFCFF', fontSize: '0.78rem', fontStyle: 'italic', marginBottom: '0.75rem' }}>
-            "You never start from zero again."
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
-            {['React', 'TypeScript', 'Node.js', 'MongoDB', 'Groq', 'LLaMA-3.3-70b'].map(tag => (
-              <span key={tag} style={{ background: '#161B22', border: '1px solid #21262D', color: '#00FF87', fontSize: '0.62rem', padding: '2px 7px', borderRadius: '4px', fontFamily: 'JetBrains Mono' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {['E-Commerce', 'SaaS', 'Industrial'].map(tag => (
+              <span key={tag} style={{ background: 'rgba(59, 252, 255, 0.05)', border: '1px solid rgba(59, 252, 255, 0.15)', color: '#3BFCFF', fontSize: '0.6rem', padding: '2px 8px', borderRadius: '100px' }}>
                 {tag}
               </span>
             ))}

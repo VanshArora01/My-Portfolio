@@ -14,7 +14,10 @@ const Herosection = () => {
       className="mesh-bg full-screen-section" 
       style={{ 
         position: 'relative', 
+        minHeight: '100vh',
         overflow: 'hidden', 
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         background: '#050A0E'
       }}
@@ -218,8 +221,8 @@ const Herosection = () => {
           .hero-container { gap: 3rem !important; }
         }
         @media (max-width: 968px) {
-          .hero-container { flex-direction: column !important; text-align: center; gap: 3rem !important; padding: 6rem 1.5rem !important; }
-          .hero-right { order: -1; margin-bottom: 1rem; }
+          .hero-container { flex-direction: column !important; text-align: center; gap: 2rem !important; padding: 1rem 1.5rem !important; }
+          .hero-right { order: -1; margin-bottom: 0px !important; }
           .hero-container > div { max-width: 100% !important; display: flex; flex-direction: column; align-items: center; }
           .hero-container h1 { font-size: clamp(2.2rem, 10vw, 3.5rem) !important; }
           .hero-container .glass { padding: 1.5rem !important; margin-bottom: 2rem !important; }

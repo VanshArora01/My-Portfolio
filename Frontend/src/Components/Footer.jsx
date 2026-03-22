@@ -15,12 +15,12 @@ const Footer = () => {
       {/* Background Glow */}
       <div style={{ position: 'absolute', bottom: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '300px', background: 'radial-gradient(circle, rgba(0, 255, 135, 0.05) 0%, transparent 70%)', filter: 'blur(50px)', zIndex: 0 }} />
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
+      <div className="footer-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem', position: 'relative', zIndex: 1 }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', marginBottom: '4rem' }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', marginBottom: '4rem' }}>
           
           {/* Brand Column */}
-          <div style={{ gridColumn: 'span 2' }}>
+          <div className="brand-col" style={{ gridColumn: 'span 2' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
                <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#030708', fontSize: '0.75rem' }}>V</div>
                <span style={{ color: '#F0F6FC', fontSize: '1.2rem', fontWeight: 700 }}>Vansh Arora</span>
@@ -73,6 +73,14 @@ const Footer = () => {
         </div>
 
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-container { padding: 0 1.5rem !important; }
+          .footer-grid { gap: 2.5rem !important; margin-bottom: 3rem !important; }
+          .brand-col { grid-column: span 1 !important; }
+          footer { padding: 4rem 0 2rem !important; }
+        }
+      `}</style>
     </footer>
   );
 };

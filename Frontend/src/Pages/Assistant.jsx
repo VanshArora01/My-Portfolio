@@ -681,7 +681,7 @@ const AssistantPage = () => {
             bottom: 0,
             left: 0,
             width: '100%',
-            padding: isMobile ? '15px' : '40px 60px',
+            padding: isMobile ? '15px 15px calc(15px + env(safe-area-inset-bottom, 20px))' : '40px 60px',
             background: isMobile ? '#020408' : 'linear-gradient(to top, #020408 70%, transparent)',
             borderTop: isMobile ? '1px solid rgba(255,255,255,0.05)' : 'none',
             zIndex: 10

@@ -171,15 +171,12 @@
   }
   
   /* Mobile Bento Shape */
-  .magic-bento-card:nth-child(1), /* About */
-  .magic-bento-card:nth-child(4), /* DSA */
-  .magic-bento-card:nth-child(5)  /* Current Project */ {
+  .magic-bento-card:nth-child(1),
+  .magic-bento-card:nth-child(2),
+  .magic-bento-card:nth-child(3),
+  .magic-bento-card:nth-child(4),
+  .magic-bento-card:nth-child(5) {
     grid-column: span 2;
-  }
-  
-  .magic-bento-card:nth-child(2), /* Core Stack */
-  .magic-bento-card:nth-child(3)  /* Hackathons */ {
-    grid-column: span 1;
   }
 
   /* Make smaller cards content shrink slightly */

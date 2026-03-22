@@ -118,7 +118,7 @@ const SnakeGame = () => {
         </div>
 
         {/* The Grid */}
-        <div style={{
+        <div className="snake-grid" style={{
           width: '320px',
           height: '320px',
           margin: '50px auto 0',
@@ -132,7 +132,7 @@ const SnakeGame = () => {
           overflow: 'hidden'
         }}>
           {snake.map((seg, i) => (
-            <div key={i} style={{ gridColumn: seg.x + 1, gridRow: seg.y + 1, background: i === 0 ? '#3BFCFF' : 'rgba(59, 252, 255, 0.5)', borderRadius: '2px', boxShadow: i === 0 ? '0 0 10px #3BFCFF' : 'none' }} />
+            <div key={i} className={`snake-segment ${i === 0 ? 'head' : ''}`} style={{ gridColumn: seg.x + 1, gridRow: seg.y + 1, background: i === 0 ? '#3BFCFF' : 'rgba(59, 252, 255, 0.5)', borderRadius: '2px' }} />
           ))}
           <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} style={{ gridColumn: food.x + 1, gridRow: food.y + 1, background: '#00FF87', borderRadius: '50%', boxShadow: '0 0 15px #00FF87' }} />
         </div>
@@ -179,6 +179,22 @@ const SnakeGame = () => {
       <p style={{ color: '#4A5568', fontSize: '0.7rem', marginTop: '1.5rem', letterSpacing: '1px' }}>
         TIP: CONSUME DATA NODES TO GROW. USE ARROWS OR WASD TO NAVIGATE.
       </p>
+      <style>{`
+        .snake-segment.head {
+          box-shadow: 0 0 10px #3BFCFF;
+        }
+        @media (max-width: 640px) {
+          .snake-grid {
+             margin-top: 100px !important;
+             width: 250px !important;
+             height: 250px !important;
+          }
+          .snake-segment.head {
+             box-shadow: none !important;
+             border: 1px solid #3BFCFF;
+          }
+        }
+      `}</style>
     </div>
   );
 };
