@@ -145,6 +145,10 @@ canvas {
     0 0 20px rgba(0, 255, 135, 0.15);
 }
 
+.glass-no-shimmer::before {
+  display: none !important;
+}
+
 .glass::before {
   content: '';
   position: absolute;

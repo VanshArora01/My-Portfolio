@@ -127,7 +127,7 @@ const Navbar = () => {
         <motion.div
           onPointerMove={(e) => mouseX.set(e.clientX)}
           onPointerLeave={() => mouseX.set(Infinity)}
-          className="glass"
+          className="glass glass-no-shimmer"
           style={{
             padding: '10px 14px',
             borderRadius: '26px',
