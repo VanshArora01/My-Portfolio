@@ -56,16 +56,18 @@ const NavItem = ({ link, mouseX, isExternal = false }) => {
       <AnimatePresence>
         {hovered && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.8 }}
-            animate={{ opacity: 1, y: -45, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.8, x: '-50%', y: 10 }}
+            animate={{ opacity: 1, scale: 1, x: '-50%', y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: '-50%', y: 10 }}
             style={{
               position: 'absolute',
+              bottom: 'calc(100% + 20px)',
+              left: '50%',
               padding: '6px 14px',
               borderRadius: '100px',
-              background: 'rgba(3, 7, 8, 0.85)',
+              background: 'rgba(3, 7, 8, 0.9)',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               color: '#F0F6FC',
               fontSize: '0.7rem',
               fontWeight: 800,
@@ -73,7 +75,8 @@ const NavItem = ({ link, mouseX, isExternal = false }) => {
               pointerEvents: 'none',
               boxShadow: '0 10px 20px rgba(0,0,0,0.5)',
               textTransform: 'uppercase',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.05em',
+              zIndex: 1000
             }}
           >
             {link.name}
@@ -133,7 +136,8 @@ const Navbar = () => {
             gap: '10px',
             background: 'rgba(3, 7, 8, 0.4)',
             border: '1px solid rgba(255, 255, 255, 0.05)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+            overflow: 'visible'
           }}
         >
           {leftLinks.map((link) => (

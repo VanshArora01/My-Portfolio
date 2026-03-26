@@ -499,13 +499,14 @@ const AssistantPage = () => {
 
   return (
     <div className="mesh-bg" style={{ 
-      minHeight: '100dvh',
+      height: '100dvh',
       background: '#050A0E',
       color: '#F0F6FC',
       fontFamily: 'Outfit, sans-serif',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: 'relative'
     }}>
       {/* ── DYNAMIC BACKGROUND LAYER ── */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
@@ -543,14 +544,14 @@ const AssistantPage = () => {
         flex: 1, 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        padding: isMobile ? '0' : '40px 60px 100px 60px',
-        gap: isMobile ? '0' : '40px',
+        padding: isMobile ? '0' : '20px 40px 110px 40px',
+        gap: isMobile ? '0' : '30px',
         zIndex: 5,
-        height: '100%',
-        alignItems: 'stretch',
-        maxWidth: '1800px',
+        minHeight: 0,
+        maxWidth: '1600px',
         margin: '0 auto',
-        width: '100%'
+        width: '100%',
+        overflow: 'hidden'
       }}>
         
         {/* ── LEFT PANEL (DESKTOP ONLY) ── */}
@@ -597,7 +598,7 @@ const AssistantPage = () => {
               </div>
             </div>
 
-            <button onClick={resetChat} className="neon-button">
+            <button onClick={resetChat} className="neon-button" style={{ marginTop: 'auto', flexShrink: 0 }}>
               <RotateCcw size={16} /> REBOOT_SYSTEM_INSTANCE
             </button>
           </div>
@@ -615,6 +616,7 @@ const AssistantPage = () => {
           border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
           overflow: 'hidden',
           position: 'relative',
+          height: '100%',
         }}>
           {/* MOBILE HEADER (CLEANER) */}
           {isMobile && (
@@ -654,8 +656,7 @@ const AssistantPage = () => {
             style={{
               flex: 1,
               overflowY: 'auto',
-              padding: isMobile ? '20px' : '40px',
-              paddingBottom: isMobile ? '100px' : '180px',
+              padding: isMobile ? '20px 20px 40px 20px' : '40px 40px 60px 40px',
               display: 'flex',
               flexDirection: 'column',
               gap: '24px',
@@ -707,14 +708,14 @@ const AssistantPage = () => {
 
           {/* Input Area */}
           <div style={{
-            position: isMobile ? 'sticky' : 'absolute',
-            bottom: 0,
-            left: 0,
+            flexShrink: 0,
             width: '100%',
-            padding: isMobile ? '15px 15px calc(30px + env(safe-area-inset-bottom, 20px))' : '40px 60px',
-            background: isMobile ? '#020408' : 'linear-gradient(to top, #020408 70%, transparent)',
-            borderTop: isMobile ? '1px solid rgba(255,255,255,0.05)' : 'none',
-            zIndex: 100
+            padding: isMobile ? '15px' : '30px 40px',
+            paddingBottom: isMobile ? 'calc(20px + env(safe-area-inset-bottom, 20px))' : '30px',
+            background: isMobile ? '#020408' : 'rgba(5, 10, 14, 0.4)',
+            borderTop: '1px solid rgba(255,255,255,0.05)',
+            zIndex: 100,
+            backdropFilter: 'blur(20px)'
           }}>
             <form onSubmit={handleSubmit} style={{
               display: 'flex',
